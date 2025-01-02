@@ -61,6 +61,16 @@ include::{snippets}/api/v1/user-wallets/balance/http-request.adoc[]
 include::{snippets}/api/v1/user-wallets/balance/response-fields.adoc[]
 include::{snippets}/api/v1/user-wallets/balance/response-body.adoc[]
 
+[[chargeBalance]]
+== 잔액 충전
+=== Http
+include::{snippets}/api/v1/user-wallets/balance/charge/http-request.adoc[]
+=== Request
+include::{snippets}/api/v1/user-wallets/balance/charge/request-fields.adoc[]
+=== Response
+include::{snippets}/api/v1/user-wallets/balance/charge/response-fields.adoc[]
+include::{snippets}/api/v1/user-wallets/balance/charge/response-body.adoc[]
+
 [[concertPayment]]
 == 결제
 === Http
