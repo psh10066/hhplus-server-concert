@@ -8,10 +8,12 @@ import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper
 
 @ExtendWith(RestDocumentationExtension::class)
 abstract class RestDocsTest {
 
+    protected val objectMapper = ObjectMapper()
     protected lateinit var mockMvc: MockMvc
     private lateinit var restDocumentation: RestDocumentationContextProvider
 

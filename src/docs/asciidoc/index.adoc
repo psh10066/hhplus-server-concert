@@ -1,0 +1,72 @@
+ifndef::snippets[]
+:snippets: build/generated-snippets
+endif::[]
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:sectlinks:
+:operation-http-request-title: Example Request
+:operation-http-response-title: Example Response
+ifndef::snippets-custom[]
+:snippets-custom: ../../../src/docs/custom
+
+[[title]]
+= 콘서트 예약 서비스 API 문서
+
+[[issueToken]]
+== 대기열 토큰 발급
+=== Http
+include::{snippets}/api/v1/queues/token/http-request.adoc[]
+=== Response
+include::{snippets}/api/v1/queues/token/response-fields.adoc[]
+include::{snippets}/api/v1/queues/token/response-body.adoc[]
+
+[[getSchedules]]
+== 예약 가능 날짜 조회
+=== Http
+include::{snippets}/api/v1/concerts/schedules/http-request.adoc[]
+=== Path Variable
+include::{snippets}/api/v1/concerts/schedules/path-parameters.adoc[]
+=== Response
+include::{snippets}/api/v1/concerts/schedules/response-fields.adoc[]
+include::{snippets}/api/v1/concerts/schedules/response-body.adoc[]
+
+[[getSeats]]
+== 예약 가능 좌석 조회
+=== Http
+include::{snippets}/api/v1/concerts/schedules/seats/http-request.adoc[]
+=== Path Variable
+include::{snippets}/api/v1/concerts/schedules/seats/path-parameters.adoc[]
+=== Response
+include::{snippets}/api/v1/concerts/schedules/seats/response-fields.adoc[]
+include::{snippets}/api/v1/concerts/schedules/seats/response-body.adoc[]
+
+[[concertReservation]]
+== 좌석 예약 요청
+=== Http
+include::{snippets}/api/v1/reservations/concert/http-request.adoc[]
+=== Request
+include::{snippets}/api/v1/reservations/concert/request-fields.adoc[]
+=== Response
+include::{snippets}/api/v1/reservations/concert/response-fields.adoc[]
+include::{snippets}/api/v1/reservations/concert/response-body.adoc[]
+
+[[getBalance]]
+== 잔액 조회
+=== Http
+include::{snippets}/api/v1/user-wallets/balance/http-request.adoc[]
+=== Response
+include::{snippets}/api/v1/user-wallets/balance/response-fields.adoc[]
+include::{snippets}/api/v1/user-wallets/balance/response-body.adoc[]
+
+[[concertPayment]]
+== 결제
+=== Http
+include::{snippets}/api/v1/payment/concert/http-request.adoc[]
+=== Request
+include::{snippets}/api/v1/payment/concert/request-fields.adoc[]
+=== Response
+include::{snippets}/api/v1/payment/concert/response-fields.adoc[]
+include::{snippets}/api/v1/payment/concert/response-body.adoc[]
