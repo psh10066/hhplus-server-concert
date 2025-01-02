@@ -5,6 +5,7 @@ plugins {
 	kotlin("plugin.jpa") version "2.1.0"
 	id("org.springframework.boot") version "3.4.1"
 	id("io.spring.dependency-management") version "1.1.7"
+	id("org.asciidoctor.jvm.convert") version "4.0.4"
 }
 
 fun getGitHash(): String {
@@ -58,6 +59,38 @@ dependencies {
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mysql")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+// Spring REST Docs
+val asciidoctorExt: Configuration by configurations.creating
+dependencies {
+	asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
+	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+}
+
+val snippetsDir by extra { file("build/generated-snippets") }
+
+tasks {
+	test {
+		outputs.dir(snippetsDir)
+	}
+
+	asciidoctor {
+		inputs.dir(snippetsDir)
+		configurations(asciidoctorExt.name)
+		baseDirFollowsSourceFile()
+		dependsOn(test)
+		doLast {
+			copy {
+				from("build/docs/asciidoc")
+				into("build/resources/main/static/docs")
+			}
+		}
+	}
+
+	bootJar {
+		dependsOn(asciidoctor)
+	}
 }
 
 tasks.withType<Test> {
