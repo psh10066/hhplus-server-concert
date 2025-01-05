@@ -1,9 +1,11 @@
 package kr.hhplus.be.server.api.controller.v1
 
+import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document
 import kr.hhplus.be.server.api.RestDocsTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
+import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
+import org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders
 import org.springframework.restdocs.operation.preprocess.Preprocessors.*
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
@@ -35,6 +37,9 @@ class ConcertControllerTest : RestDocsTest() {
                     "api/v1/concerts/schedules",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
+                    requestHeaders(
+                        headerWithName("token").description("대기열 토큰")
+                    ),
                     pathParameters(
                         parameterWithName("concertId").description("콘서트 ID")
                     ),
@@ -60,6 +65,9 @@ class ConcertControllerTest : RestDocsTest() {
                     "api/v1/concerts/schedules/seats",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
+                    requestHeaders(
+                        headerWithName("token").description("대기열 토큰")
+                    ),
                     pathParameters(
                         parameterWithName("concertScheduleId").description("콘서트 일정 ID")
                     ),

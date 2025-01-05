@@ -1,11 +1,13 @@
 package kr.hhplus.be.server.api.controller.v1
 
+import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document
 import kr.hhplus.be.server.api.RestDocsTest
 import kr.hhplus.be.server.api.controller.v1.request.ConcertPaymentRequest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
+import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
+import org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders
 import org.springframework.restdocs.operation.preprocess.Preprocessors.*
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.*
@@ -36,6 +38,9 @@ class PaymentControllerTest : RestDocsTest() {
                     "api/v1/payment/concert",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
+                    requestHeaders(
+                        headerWithName("token").description("대기열 토큰")
+                    ),
                     requestFields(
                         fieldWithPath("concertReservationId").type(JsonFieldType.NUMBER).description("콘서트 예약 ID"),
                     ),

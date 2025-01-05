@@ -1,11 +1,13 @@
 package kr.hhplus.be.server.api.controller.v1
 
+import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document
 import kr.hhplus.be.server.api.RestDocsTest
 import kr.hhplus.be.server.api.controller.v1.request.ChargeBalanceRequest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
+import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
+import org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders
 import org.springframework.restdocs.operation.preprocess.Preprocessors.*
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.*
@@ -35,6 +37,9 @@ class UserWalletControllerTest : RestDocsTest() {
                     "api/v1/user-wallets/balance",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
+                    requestHeaders(
+                        headerWithName("userId").description("유저 ID")
+                    ),
                     responseFields(
                         fieldWithPath("result").type(JsonFieldType.STRING).description("요청 성공 여부"),
                         fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("유저 ID"),
@@ -59,6 +64,9 @@ class UserWalletControllerTest : RestDocsTest() {
                     "api/v1/user-wallets/balance/charge",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
+                    requestHeaders(
+                        headerWithName("userId").description("유저 ID")
+                    ),
                     requestFields(
                         fieldWithPath("amount").type(JsonFieldType.NUMBER).description("증액량"),
                     ),

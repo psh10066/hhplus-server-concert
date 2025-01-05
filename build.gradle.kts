@@ -6,6 +6,7 @@ plugins {
 	id("org.springframework.boot") version "3.4.1"
 	id("io.spring.dependency-management") version "1.1.7"
 	id("org.asciidoctor.jvm.convert") version "4.0.4"
+	id("com.epages.restdocs-api-spec") version "0.19.4"
 }
 
 fun getGitHash(): String {
@@ -59,37 +60,30 @@ dependencies {
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mysql")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-}
 
-// Spring REST Docs
-val asciidoctorExt: Configuration by configurations.creating
-dependencies {
-	asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
+	// Spring REST Docs
 	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+
+	// Swagger UI
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.0")
+
+	// OpenAPI Specification
+	testImplementation("com.epages:restdocs-api-spec-mockmvc:0.19.4")
 }
 
-val snippetsDir by extra { file("build/generated-snippets") }
+// OpenAPI Specification
+configure<com.epages.restdocs.apispec.gradle.OpenApi3Extension> {
+	setServer("http://localhost:8080")
+	title = "콘서트 예약 서비스 API"
+	description = "콘서트 예약 서비스 API 명세서"
+	version = getGitHash()
+	format = "json"
+	outputDirectory = "build/resources/main/static"
+}
 
 tasks {
-	test {
-		outputs.dir(snippetsDir)
-	}
-
-	asciidoctor {
-		inputs.dir(snippetsDir)
-		configurations(asciidoctorExt.name)
-		baseDirFollowsSourceFile()
-		dependsOn(test)
-		doLast {
-			copy {
-				from("build/docs/asciidoc")
-				into("build/resources/main/static/docs")
-			}
-		}
-	}
-
 	bootJar {
-		dependsOn(asciidoctor)
+		dependsOn(":openapi3")
 	}
 }
 
