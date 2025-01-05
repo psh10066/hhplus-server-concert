@@ -1,16 +1,17 @@
 package kr.hhplus.be.server.api.controller.v1
 
-import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document
+import com.epages.restdocs.apispec.ResourceDocumentation.resource
+import com.epages.restdocs.apispec.ResourceSnippetParameters
+import com.epages.restdocs.apispec.Schema
 import kr.hhplus.be.server.api.RestDocsTest
 import kr.hhplus.be.server.api.controller.v1.request.ChargeBalanceRequest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
-import org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders
-import org.springframework.restdocs.operation.preprocess.Preprocessors.*
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.payload.JsonFieldType
-import org.springframework.restdocs.payload.PayloadDocumentation.*
+import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -34,17 +35,23 @@ class UserWalletControllerTest : RestDocsTest() {
             .andExpect(status().isOk)
             .andDo(
                 document(
-                    "api/v1/user-wallets/balance",
-                    preprocessRequest(prettyPrint()),
-                    preprocessResponse(prettyPrint()),
-                    requestHeaders(
-                        headerWithName("userId").description("유저 ID")
-                    ),
-                    responseFields(
-                        fieldWithPath("result").type(JsonFieldType.STRING).description("요청 성공 여부"),
-                        fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("유저 ID"),
-                        fieldWithPath("data.balance").type(JsonFieldType.NUMBER).description("잔액"),
-                        fieldWithPath("error").type(JsonFieldType.NULL).ignored(),
+                    "잔액 조회",
+                    resource(
+                        ResourceSnippetParameters.builder()
+                            .tag("유저 지갑")
+                            .summary("잔액 조회 API")
+                            .description("유저 잔액 조회 API")
+                            .requestHeaders(
+                                headerWithName("userId").description("유저 ID")
+                            )
+                            .responseSchema(Schema("UserWalletBalanceResponse"))
+                            .responseFields(
+                                fieldWithPath("result").type(JsonFieldType.STRING).description("요청 성공 여부"),
+                                fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("유저 ID"),
+                                fieldWithPath("data.balance").type(JsonFieldType.NUMBER).description("잔액"),
+                                fieldWithPath("error").type(JsonFieldType.NULL).ignored(),
+                            )
+                            .build()
                     )
                 )
             )
@@ -61,19 +68,26 @@ class UserWalletControllerTest : RestDocsTest() {
             .andExpect(status().isOk)
             .andDo(
                 document(
-                    "api/v1/user-wallets/balance/charge",
-                    preprocessRequest(prettyPrint()),
-                    preprocessResponse(prettyPrint()),
-                    requestHeaders(
-                        headerWithName("userId").description("유저 ID")
-                    ),
-                    requestFields(
-                        fieldWithPath("amount").type(JsonFieldType.NUMBER).description("증액량"),
-                    ),
-                    responseFields(
-                        fieldWithPath("result").type(JsonFieldType.STRING).description("요청 성공 여부"),
-                        fieldWithPath("data").type(JsonFieldType.NULL).ignored(),
-                        fieldWithPath("error").type(JsonFieldType.NULL).ignored(),
+                    "잔액 충전",
+                    resource(
+                        ResourceSnippetParameters.builder()
+                            .tag("유저 지갑")
+                            .summary("잔액 충전 API")
+                            .description("유저 잔액 충전 API")
+                            .requestHeaders(
+                                headerWithName("userId").description("유저 ID")
+                            )
+                            .requestSchema(Schema("ChargeBalanceRequest"))
+                            .requestFields(
+                                fieldWithPath("amount").type(JsonFieldType.NUMBER).description("증액량"),
+                            )
+                            .responseSchema(Schema("SuccessResponse"))
+                            .responseFields(
+                                fieldWithPath("result").type(JsonFieldType.STRING).description("요청 성공 여부"),
+                                fieldWithPath("data").type(JsonFieldType.NULL).ignored(),
+                                fieldWithPath("error").type(JsonFieldType.NULL).ignored(),
+                            )
+                            .build()
                     )
                 )
             )
