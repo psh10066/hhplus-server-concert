@@ -5,7 +5,6 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters
 import com.epages.restdocs.apispec.Schema
 import kr.hhplus.be.server.api.RestDocsTest
 import kr.hhplus.be.server.api.controller.v1.request.ConcertReservationRequest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
@@ -16,14 +15,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 class ReservationControllerTest : RestDocsTest() {
-
-    private lateinit var controller: ReservationController
-
-    @BeforeEach
-    fun setUp() {
-        controller = ReservationController()
-        mockMvc = mockController(controller)
-    }
 
     @Test
     fun concertReservation() {

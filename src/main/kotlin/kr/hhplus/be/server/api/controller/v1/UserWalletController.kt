@@ -2,6 +2,7 @@ package kr.hhplus.be.server.api.controller.v1
 
 import kr.hhplus.be.server.api.controller.v1.request.ChargeBalanceRequest
 import kr.hhplus.be.server.api.controller.v1.response.UserWalletBalanceResponse
+import kr.hhplus.be.server.domain.model.user.dto.UserInfo
 import kr.hhplus.be.server.support.response.ApiResponse
 import org.springframework.web.bind.annotation.*
 
@@ -11,15 +12,15 @@ class UserWalletController {
 
     @GetMapping("/balance")
     fun getBalance(
-        @RequestHeader userId: Long
+        userInfo: UserInfo
     ): ApiResponse<UserWalletBalanceResponse> {
-        return ApiResponse.success(UserWalletBalanceResponse(userId = userId, balance = 1000))
+        return ApiResponse.success(UserWalletBalanceResponse(userId = userInfo.id, balance = 1000))
     }
 
     @PatchMapping("/balance")
     fun chargeBalance(
         @RequestBody request: ChargeBalanceRequest,
-        @RequestHeader userId: Long
+        userInfo: UserInfo
     ): ApiResponse<Any> {
         return ApiResponse.success()
     }

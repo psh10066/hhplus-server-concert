@@ -4,7 +4,6 @@ import com.epages.restdocs.apispec.ResourceDocumentation.resource
 import com.epages.restdocs.apispec.ResourceSnippetParameters
 import com.epages.restdocs.apispec.Schema
 import kr.hhplus.be.server.api.RestDocsTest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
@@ -14,14 +13,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 class QueueControllerTest : RestDocsTest() {
-
-    private lateinit var controller: QueueController
-
-    @BeforeEach
-    fun setUp() {
-        controller = QueueController()
-        mockMvc = mockController(controller)
-    }
 
     @Test
     fun issueToken() {

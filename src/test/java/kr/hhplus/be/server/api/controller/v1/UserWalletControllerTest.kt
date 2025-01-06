@@ -5,7 +5,6 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters
 import com.epages.restdocs.apispec.Schema
 import kr.hhplus.be.server.api.RestDocsTest
 import kr.hhplus.be.server.api.controller.v1.request.ChargeBalanceRequest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
@@ -17,14 +16,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 class UserWalletControllerTest : RestDocsTest() {
-
-    private lateinit var controller: UserWalletController
-
-    @BeforeEach
-    fun setUp() {
-        controller = UserWalletController()
-        mockMvc = mockController(controller)
-    }
 
     @Test
     fun getBalance() {
