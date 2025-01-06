@@ -61,6 +61,9 @@ dependencies {
 	testImplementation("org.testcontainers:mysql")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
+	// Instancio
+	testImplementation("org.instancio:instancio-junit:5.2.1")
+
 	// Spring REST Docs
 	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
 

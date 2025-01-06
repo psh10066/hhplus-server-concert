@@ -1,0 +1,7 @@
+CREATE TABLE user (
+    id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    uuid BINARY(16) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL
+);
