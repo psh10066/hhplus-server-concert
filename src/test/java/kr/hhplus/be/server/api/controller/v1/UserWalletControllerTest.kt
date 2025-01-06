@@ -5,7 +5,11 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters
 import com.epages.restdocs.apispec.Schema
 import kr.hhplus.be.server.api.RestDocsTest
 import kr.hhplus.be.server.api.controller.v1.request.ChargeBalanceRequest
+import kr.hhplus.be.server.domain.model.user.UserWallet
+import kr.hhplus.be.server.infrastructure.dao.user.UserWalletJpaRepository
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
@@ -15,7 +19,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-class UserWalletControllerTest : RestDocsTest() {
+class UserWalletControllerTest(
+    @Autowired private val userWalletJpaRepository: UserWalletJpaRepository
+) : RestDocsTest() {
+
+    @BeforeEach
+    fun setUp() {
+        userWalletJpaRepository.save(UserWallet(userId = 1L, balance = 10000L))
+    }
 
     @Test
     fun getBalance() {

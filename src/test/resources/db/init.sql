@@ -5,3 +5,11 @@ CREATE TABLE user (
     created_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL
 );
+
+CREATE TABLE user_wallet (
+    id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    balance BIGINT NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL
+);
