@@ -21,3 +21,13 @@ CREATE TABLE user_wallet_history (
     created_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL
 );
+
+CREATE TABLE queue (
+    id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    user_uuid BINARY(16) NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    expired_at DATETIME NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL
+);
