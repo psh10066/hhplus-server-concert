@@ -6,18 +6,11 @@ import jakarta.persistence.Table
 import kr.hhplus.be.server.infrastructure.dao.BaseEntity
 
 @Entity
-@Table(name = "user_wallet")
-class UserWallet(
+@Table(name = "user_wallet_history")
+class UserWalletHistory(
     @Column(nullable = false, unique = true)
-    val userId: Long,
+    val userWalletId: Long,
 
     @Column(nullable = false)
-    var balance: Long = 0L,
-) : BaseEntity() {
-
-    fun charge(amount: Long) {
-        require(amount > 0) { "잘못된 충전 금액입니다." }
-
-        balance += amount
-    }
-}
+    var amount: Long,
+) : BaseEntity()

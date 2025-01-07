@@ -13,4 +13,13 @@ class UserWalletRepositoryImpl(
         return userWalletJpaRepository.findByUserId(userId)
             ?: throw IllegalStateException("존재하지 않는 지갑입니다.")
     }
+
+    override fun getByUserIdWithLock(userId: Long): UserWallet {
+        return userWalletJpaRepository.findForUpdateByUserId(userId)
+            ?: throw IllegalStateException("존재하지 않는 지갑입니다.")
+    }
+
+    override fun save(userWallet: UserWallet): UserWallet {
+        return userWalletJpaRepository.save(userWallet)
+    }
 }

@@ -43,4 +43,27 @@ class UserWalletRepositoryImplTest(
             .isInstanceOf(IllegalStateException::class.java)
             .hasMessage("존재하지 않는 지갑입니다.")
     }
+
+    @Test
+    fun `비관적 락과 함께 사용자의 지갑을 조회할 수 있다`() {
+        // given
+        userWalletJpaRepository.save(UserWallet(userId = 2L, balance = 10000L))
+
+        // when
+        val result = userWalletRepositoryImpl.getByUserIdWithLock(2L)
+
+        // then
+        assertThat(result.userId).isEqualTo(2L)
+        assertThat(result.balance).isEqualTo(10000L)
+    }
+
+    @Test
+    fun `비관적 락과 함께 사용자의 지갑 조회 시 존재하지 않으면 IllegalStateException이 발생한다`() {
+        // when then
+        assertThatThrownBy {
+            userWalletRepositoryImpl.getByUserIdWithLock(2L)
+        }
+            .isInstanceOf(IllegalStateException::class.java)
+            .hasMessage("존재하지 않는 지갑입니다.")
+    }
 }

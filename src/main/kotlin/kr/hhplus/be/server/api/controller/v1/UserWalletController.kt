@@ -26,6 +26,8 @@ class UserWalletController(
         @RequestBody request: ChargeBalanceRequest,
         userInfo: UserInfo
     ): ApiResponse<Any> {
+        val amount = request.amount
+        userService.chargeBalance(userInfo.id, amount)
         return ApiResponse.success()
     }
 }
