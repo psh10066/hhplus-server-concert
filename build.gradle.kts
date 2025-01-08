@@ -73,6 +73,10 @@ dependencies {
 
 	// OpenAPI Specification
 	testImplementation("com.epages:restdocs-api-spec-mockmvc:0.19.4")
+
+	// QueryDSL
+	implementation("com.querydsl:querydsl-jpa:${dependencyManagement.importedProperties["querydsl.version"]}:jakarta")
+	kapt("com.querydsl:querydsl-apt:${dependencyManagement.importedProperties["querydsl.version"]}:jakarta")
 }
 
 // OpenAPI Specification
