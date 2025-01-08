@@ -1,8 +1,6 @@
 package kr.hhplus.be.server.domain.model.queue
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import kr.hhplus.be.server.infrastructure.dao.BaseEntity
 import java.time.Clock
 import java.time.LocalDateTime
@@ -14,6 +12,7 @@ class Queue(
     @Column(nullable = false, unique = true)
     val userUuid: UUID,
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     val status: QueueStatus,
 
