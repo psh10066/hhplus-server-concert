@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.domain.model.queue
 
 import org.assertj.core.api.Assertions.assertThat
+import org.instancio.Instancio
 import org.junit.jupiter.api.Test
 import java.time.Clock
 import java.time.LocalDateTime
@@ -35,6 +36,30 @@ class QueueTest {
     fun `대기열 생성 시 토큰을 생성한다`() {
         // when
         val queue = Queue.create(Clock.systemDefaultZone(), UUID.randomUUID())
+
+        // then
+        assertThat(queue.token).isEqualTo("${queue.userUuid}|${queue.status}|${queue.expiredAt}")
+    }
+
+    @Test
+    fun `대기열 활성화 시 활성화 상태값을 적용한다`() {
+        // given
+        val queue = Instancio.create(Queue::class.java)
+
+        // when
+        queue.activate()
+
+        // then
+        assertThat(queue.status).isEqualTo(QueueStatus.ACTIVE)
+    }
+
+    @Test
+    fun `대기열 활성화 시 토큰을 갱신한다`() {
+        // given
+        val queue = Instancio.create(Queue::class.java)
+
+        // when
+        queue.activate()
 
         // then
         assertThat(queue.token).isEqualTo("${queue.userUuid}|${queue.status}|${queue.expiredAt}")

@@ -14,10 +14,10 @@ class Queue(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    val status: QueueStatus,
+    var status: QueueStatus,
 
     @Column(nullable = false)
-    val token: String,
+    var token: String,
 
     @Column(nullable = false)
     val expiredAt: LocalDateTime,
@@ -35,5 +35,10 @@ class Queue(
                 expiredAt = expiredAt
             )
         }
+    }
+
+    fun activate() {
+        status = QueueStatus.ACTIVE
+        token = "$userUuid|$status|$expiredAt"
     }
 }

@@ -7,4 +7,6 @@ interface QueueRepository {
     fun findByUserUuid(userUuid: UUID): Queue?
 
     fun save(queue: Queue): Queue
+
+    fun getNotExpiredWithOrder(count: Int): List<Queue>
 }

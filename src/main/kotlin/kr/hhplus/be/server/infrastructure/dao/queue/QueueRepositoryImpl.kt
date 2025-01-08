@@ -17,4 +17,8 @@ class QueueRepositoryImpl(
     override fun save(queue: Queue): Queue {
         return queueJpaRepository.save(queue)
     }
+
+    override fun getNotExpiredWithOrder(count: Int): List<Queue> {
+        return queueJpaRepository.getNotExpiredWithOrder(count)
+    }
 }

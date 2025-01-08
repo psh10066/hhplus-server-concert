@@ -2,14 +2,17 @@ package kr.hhplus.be.server.domain.service
 
 import kr.hhplus.be.server.domain.model.queue.Queue
 import kr.hhplus.be.server.domain.model.queue.QueueRepository
+import kr.hhplus.be.server.domain.model.queue.QueueStatus
 import kr.hhplus.be.server.helper.KSelect.Companion.field
 import org.assertj.core.api.Assertions.assertThat
 import org.instancio.Instancio
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.mockito.kotlin.given
+import org.mockito.kotlin.times
 import java.time.Clock
 import java.util.*
 
@@ -53,9 +56,35 @@ class QueueServiceTest {
         assertThat(result).isEqualTo(queue.token)
     }
 
+    @Test
+    fun `토큰 갱신 시 비활성화된 토큰만 갱신할 수 있다`() {
+        // given
+        val queues = listOf(
+            createQueueWithStatus(QueueStatus.ACTIVE),
+            createQueueWithStatus(QueueStatus.ACTIVE),
+            createQueueWithStatus(QueueStatus.ACTIVE),
+            createQueueWithStatus(QueueStatus.WAITING),
+            createQueueWithStatus(QueueStatus.WAITING),
+        )
+        given(queueRepository.getNotExpiredWithOrder(any())).willReturn(queues)
+
+        // when
+        queueService.activate()
+
+        // then
+        verify(queueRepository, times(2)).save(any())
+        assertThat(queues.count { it.status == QueueStatus.WAITING }).isEqualTo(0)
+    }
+
     private fun createQueue(userUuid: UUID): Queue {
         return Instancio.of(Queue::class.java)
             .set(field(Queue::userUuid), userUuid)
+            .create()
+    }
+
+    private fun createQueueWithStatus(status: QueueStatus): Queue {
+        return Instancio.of(Queue::class.java)
+            .set(field(Queue::status), status)
             .create()
     }
 }
