@@ -20,6 +20,7 @@ import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 class ConcertControllerTest(
@@ -32,8 +33,8 @@ class ConcertControllerTest(
     fun setUp() {
         concertJpaRepository.save(Concert(name = "아이유 콘서트", 150000L))
         concertJpaRepository.save(Concert(name = "임영웅 콘서트", 130000L))
-        concertScheduleJpaRepository.save(ConcertSchedule(concertId = 1L, startTime = LocalDateTime.of(2025, 1, 8, 11, 0)))
-        concertScheduleJpaRepository.save(ConcertSchedule(concertId = 1L, startTime = LocalDateTime.of(2025, 1, 9, 12, 0)))
+        concertScheduleJpaRepository.save(ConcertSchedule(concertId = 1L, startTime = LocalDate.now().plusDays(1).atTime(11, 0)))
+        concertScheduleJpaRepository.save(ConcertSchedule(concertId = 1L, startTime = LocalDate.now().plusDays(2).atTime(12, 0)))
         concertSeatJpaRepository.save(ConcertSeat(concertId = 1L, seatNumber = 1))
         concertSeatJpaRepository.save(ConcertSeat(concertId = 1L, seatNumber = 2))
     }

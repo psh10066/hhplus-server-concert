@@ -58,7 +58,7 @@ class ConcertServiceTest {
             createConcertSchedule(),
             createConcertSchedule()
         )
-        given(concertScheduleRepository.findByConcertId(1L)).willReturn(concertSchedules)
+        given(concertScheduleRepository.findAvailablesByConcertId(1L)).willReturn(concertSchedules)
 
         // when
         val result = concertService.findConcertSchedules(1L)

@@ -21,7 +21,7 @@ class ConcertService(
     }
 
     fun findConcertSchedules(concertId: Long): List<ConcertScheduleInfo> {
-        return concertScheduleRepository.findByConcertId(concertId).map { ConcertScheduleInfo.of(it) }
+        return concertScheduleRepository.findAvailablesByConcertId(concertId).map { ConcertScheduleInfo.of(it) }
     }
 
     fun findAvailableSeats(concertScheduleId: Long): List<ConcertSeatInfo> {
