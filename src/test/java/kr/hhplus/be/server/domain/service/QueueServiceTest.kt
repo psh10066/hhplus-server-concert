@@ -5,6 +5,7 @@ import kr.hhplus.be.server.domain.model.queue.QueueRepository
 import kr.hhplus.be.server.domain.model.queue.QueueStatus
 import kr.hhplus.be.server.helper.KSelect.Companion.field
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.instancio.Instancio
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -74,6 +75,52 @@ class QueueServiceTest {
         // then
         verify(queueRepository, times(2)).save(any())
         assertThat(queues.count { it.status == QueueStatus.WAITING }).isEqualTo(0)
+    }
+
+    @Test
+    fun `토큰으로 조회한 대기열이 없으면 IllegalArgumentException이 발생한다`() {
+        // given
+        val token = "token"
+        given(queueRepository.findNotExpiredByToken(token)).willReturn(null)
+
+        // when then
+        assertThatThrownBy {
+            queueService.getActiveQueue(token)
+        }
+            .isInstanceOf(IllegalArgumentException::class.java)
+            .hasMessage("활성화된 대기열이 아닙니다.")
+    }
+
+    @Test
+    fun `토큰으로 조회한 대기열이 활성 상태가 아니면 IllegalArgumentException이 발생한다`() {
+        // given
+        val token = "token"
+        val queue = createQueueWithStatus(QueueStatus.WAITING)
+        given(queueRepository.findNotExpiredByToken(token)).willReturn(queue)
+
+        // when then
+        assertThatThrownBy {
+            queueService.getActiveQueue(token)
+        }
+            .isInstanceOf(IllegalArgumentException::class.java)
+            .hasMessage("활성화된 대기열이 아닙니다.")
+    }
+
+    @Test
+    fun `토큰으로 조회한 대기열이 활성 상태이면 정상적으로 조회할 수 있다`() {
+        // given
+        val token = "token"
+        val queue = createQueueWithStatus(QueueStatus.ACTIVE)
+        given(queueRepository.findNotExpiredByToken(token)).willReturn(queue)
+
+        // when
+        val result = queueService.getActiveQueue(token)
+
+        // then
+        assertThat(result.id).isEqualTo(queue.id)
+        assertThat(result.status).isEqualTo(queue.status)
+        assertThat(result.userUuid).isEqualTo(queue.userUuid)
+        assertThat(result.expiredAt).isEqualTo(queue.expiredAt)
     }
 
     private fun createQueue(userUuid: UUID): Queue {

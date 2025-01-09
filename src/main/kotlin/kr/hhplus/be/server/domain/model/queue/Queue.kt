@@ -41,4 +41,8 @@ class Queue(
         status = QueueStatus.ACTIVE
         token = "$userUuid|$status|$expiredAt"
     }
+
+    fun isActive(): Boolean {
+        return status == QueueStatus.ACTIVE
+    }
 }

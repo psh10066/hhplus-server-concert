@@ -20,4 +20,15 @@ class QueueCustomRepositoryImpl(
             .limit(count.toLong())
             .fetch()
     }
+
+    override fun findNotExpiredByToken(token: String): Queue? {
+        return queryFactory
+            .select(queue)
+            .from(queue)
+            .where(
+                queue.token.eq(token),
+                queue.expiredAt.after(LocalDateTime.now(clock))
+            )
+            .fetchOne()
+    }
 }

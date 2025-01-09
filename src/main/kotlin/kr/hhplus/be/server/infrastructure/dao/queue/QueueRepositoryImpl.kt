@@ -21,4 +21,8 @@ class QueueRepositoryImpl(
     override fun getNotExpiredWithOrder(count: Int): List<Queue> {
         return queueJpaRepository.getNotExpiredWithOrder(count)
     }
+
+    override fun findNotExpiredByToken(token: String): Queue? {
+        return queueJpaRepository.findNotExpiredByToken(token)
+    }
 }

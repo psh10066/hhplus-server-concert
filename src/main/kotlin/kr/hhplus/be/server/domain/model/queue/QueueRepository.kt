@@ -9,4 +9,6 @@ interface QueueRepository {
     fun save(queue: Queue): Queue
 
     fun getNotExpiredWithOrder(count: Int): List<Queue>
+
+    fun findNotExpiredByToken(token: String): Queue?
 }

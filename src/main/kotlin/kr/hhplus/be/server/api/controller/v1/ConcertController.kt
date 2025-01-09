@@ -2,6 +2,7 @@ package kr.hhplus.be.server.api.controller.v1
 
 import kr.hhplus.be.server.api.controller.v1.response.GetConcertScheduleResponse
 import kr.hhplus.be.server.api.controller.v1.response.GetConcertSeatResponse
+import kr.hhplus.be.server.domain.model.queue.dto.QueueInfo
 import kr.hhplus.be.server.support.response.ApiResponse
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
@@ -13,7 +14,7 @@ class ConcertController {
     @GetMapping("/{concertId}/schedules")
     fun getSchedules(
         @PathVariable concertId: Long,
-        @RequestHeader token: String
+        queueInfo: QueueInfo
     ): ApiResponse<GetConcertScheduleResponse> {
         return ApiResponse.success(
             GetConcertScheduleResponse(
@@ -28,7 +29,7 @@ class ConcertController {
     @GetMapping("/schedules/{concertScheduleId}/seats")
     fun getSeats(
         @PathVariable concertScheduleId: Long,
-        @RequestHeader token: String
+        queueInfo: QueueInfo
     ): ApiResponse<GetConcertSeatResponse> {
         return ApiResponse.success(
             GetConcertSeatResponse(
