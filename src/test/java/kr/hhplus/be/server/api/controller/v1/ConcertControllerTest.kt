@@ -4,7 +4,11 @@ import com.epages.restdocs.apispec.ResourceDocumentation.resource
 import com.epages.restdocs.apispec.ResourceSnippetParameters
 import com.epages.restdocs.apispec.Schema
 import kr.hhplus.be.server.api.ControllerIntegrationTest
+import kr.hhplus.be.server.domain.model.concert.Concert
+import kr.hhplus.be.server.infrastructure.dao.concert.ConcertJpaRepository
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.payload.JsonFieldType
@@ -13,7 +17,55 @@ import org.springframework.restdocs.request.RequestDocumentation.parameterWithNa
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-class ConcertControllerTest : ControllerIntegrationTest() {
+class ConcertControllerTest(
+    @Autowired private val concertJpaRepository: ConcertJpaRepository
+) : ControllerIntegrationTest() {
+
+    @BeforeEach
+    fun setUp() {
+        concertJpaRepository.save(Concert(name = "아이유 콘서트", 150000L))
+        concertJpaRepository.save(Concert(name = "임영웅 콘서트", 130000L))
+    }
+
+    @Test
+    fun getConcerts() {
+        mockMvc.perform(
+            get("/api/v1/concerts")
+                .header("token", "token:123")
+                .param("page", "1")
+                .param("size", "10")
+        )
+            .andExpect(status().isOk)
+            .andDo(
+                document(
+                    "콘서트 목록 조회",
+                    resource(
+                        ResourceSnippetParameters.builder()
+                            .tag("콘서트")
+                            .summary("콘서트 목록 조회 API")
+                            .description("콘서트 목록 조회 API")
+                            .requestHeaders(
+                                headerWithName("token").description("대기열 토큰")
+                            )
+                            .queryParameters(
+                                parameterWithName("page").description("페이지 번호"),
+                                parameterWithName("size").description("페이지 크기")
+                            )
+                            .responseSchema(Schema("GetConcertResponse"))
+                            .responseFields(
+                                fieldWithPath("result").type(JsonFieldType.STRING).description("요청 성공 여부"),
+                                fieldWithPath("data.concerts.totalElements").type(JsonFieldType.NUMBER).description("총 개수"),
+                                fieldWithPath("data.concerts.totalPages").type(JsonFieldType.NUMBER).description("총 페이지 수"),
+                                fieldWithPath("data.concerts.content[].id").type(JsonFieldType.NUMBER).description("콘서트 ID"),
+                                fieldWithPath("data.concerts.content[].name").type(JsonFieldType.STRING).description("콘서트 명"),
+                                fieldWithPath("data.concerts.content[].price").type(JsonFieldType.NUMBER).description("콘서트 가격"),
+                                fieldWithPath("error").type(JsonFieldType.NULL).ignored(),
+                            )
+                            .build()
+                    )
+                )
+            )
+    }
 
     @Test
     fun getSchedules() {
