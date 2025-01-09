@@ -12,6 +12,12 @@
 
 ### 5. [API 명세](https://psh10066.github.io/hhplus-server-concert/api-spec.html)
 
+## [4주차] 주요 비즈니스 로직 개발
+
+### 1. [Swagger](docs/swagger.md)
+
+### 2. [프로젝트 및 테스트 코드 설명](docs/project-description.md)
+
 ## Getting Started
 
 ### Prerequisites
