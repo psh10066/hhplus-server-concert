@@ -5,7 +5,13 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters
 import com.epages.restdocs.apispec.Schema
 import kr.hhplus.be.server.api.ControllerIntegrationTest
 import kr.hhplus.be.server.api.controller.v1.request.ConcertReservationRequest
+import kr.hhplus.be.server.domain.model.concert.ConcertSchedule
+import kr.hhplus.be.server.domain.model.concert.ConcertSeat
+import kr.hhplus.be.server.infrastructure.dao.concert.ConcertScheduleJpaRepository
+import kr.hhplus.be.server.infrastructure.dao.concert.ConcertSeatJpaRepository
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
@@ -13,8 +19,19 @@ import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.LocalDateTime
 
-class ReservationControllerTest : ControllerIntegrationTest() {
+class ReservationControllerTest(
+    @Autowired private val concertScheduleJpaRepository: ConcertScheduleJpaRepository,
+    @Autowired private val concertSeatJpaRepository: ConcertSeatJpaRepository
+) : ControllerIntegrationTest() {
+
+    @BeforeEach
+    fun setUp() {
+        concertScheduleJpaRepository.save(ConcertSchedule(concertId = 1L, startTime = LocalDateTime.of(2025, 1, 8, 11, 0)))
+        concertSeatJpaRepository.save(ConcertSeat(concertId = 1L, seatNumber = 1))
+        concertSeatJpaRepository.save(ConcertSeat(concertId = 1L, seatNumber = 2))
+    }
 
     @Test
     fun concertReservation() {

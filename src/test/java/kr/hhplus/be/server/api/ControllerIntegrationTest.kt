@@ -37,10 +37,10 @@ abstract class ControllerIntegrationTest {
     @BeforeEach
     fun commonSetUp() {
         cleanUp.all()
-        userJpaRepository.save(User(name = "홍길동")) // UserInfoArgumentResolver 테스트를 위해 유저 생성
+        val user = userJpaRepository.save(User(name = "홍길동")) // UserInfoArgumentResolver 테스트를 위해 유저 생성
         queueJpaRepository.save(
             Queue(
-                userUuid = UUID.randomUUID(),
+                userUuid = user.uuid,
                 status = QueueStatus.ACTIVE,
                 token = "token:123",
                 expiredAt = LocalDateTime.now().plusMinutes(10)
