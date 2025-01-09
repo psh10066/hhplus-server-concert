@@ -39,3 +39,11 @@ CREATE TABLE concert (
     created_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL
 );
+
+CREATE TABLE concert_schedule (
+    id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    concert_id BIGINT NOT NULL,
+    start_time DATETIME NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL
+);

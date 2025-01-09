@@ -5,7 +5,9 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters
 import com.epages.restdocs.apispec.Schema
 import kr.hhplus.be.server.api.ControllerIntegrationTest
 import kr.hhplus.be.server.domain.model.concert.Concert
+import kr.hhplus.be.server.domain.model.concert.ConcertSchedule
 import kr.hhplus.be.server.infrastructure.dao.concert.ConcertJpaRepository
+import kr.hhplus.be.server.infrastructure.dao.concert.ConcertScheduleJpaRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,15 +18,19 @@ import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.LocalDateTime
 
 class ConcertControllerTest(
-    @Autowired private val concertJpaRepository: ConcertJpaRepository
+    @Autowired private val concertJpaRepository: ConcertJpaRepository,
+    @Autowired private val concertScheduleJpaRepository: ConcertScheduleJpaRepository
 ) : ControllerIntegrationTest() {
 
     @BeforeEach
     fun setUp() {
         concertJpaRepository.save(Concert(name = "아이유 콘서트", 150000L))
         concertJpaRepository.save(Concert(name = "임영웅 콘서트", 130000L))
+        concertScheduleJpaRepository.save(ConcertSchedule(concertId = 1L, startTime = LocalDateTime.of(2025, 1, 8, 11, 0)))
+        concertScheduleJpaRepository.save(ConcertSchedule(concertId = 1L, startTime = LocalDateTime.of(2025, 1, 9, 12, 0)))
     }
 
     @Test
@@ -92,7 +98,7 @@ class ConcertControllerTest(
                             .responseFields(
                                 fieldWithPath("result").type(JsonFieldType.STRING).description("요청 성공 여부"),
                                 fieldWithPath("data.schedules[].concertScheduleId").type(JsonFieldType.NUMBER).description("콘서트 일정 ID"),
-                                fieldWithPath("data.schedules[].date").type(JsonFieldType.STRING).description("콘서트 날짜"),
+                                fieldWithPath("data.schedules[].startTime").type(JsonFieldType.STRING).description("콘서트 일시"),
                                 fieldWithPath("error").type(JsonFieldType.NULL).ignored(),
                             )
                             .build()
