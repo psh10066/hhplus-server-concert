@@ -104,6 +104,25 @@ class ConcertSeatRepositoryImplTest(
         assertThat(result[2]).isEqualTo(seat3)
     }
 
+    @Test
+    fun `해당 콘서트의 좌석만 조회할 수 있다`() {
+        // given
+        val concert = concertJpaRepository.save(createConcert())
+        val concertSchedule = concertScheduleJpaRepository.save(createConcertSchedule(concert.id))
+        val seat1 = concertSeatJpaRepository.save(ConcertSeat(concertId = concert.id, seatNumber = 1))
+        val seat2 = concertSeatJpaRepository.save(ConcertSeat(concertId = concert.id, seatNumber = 2))
+        concertSeatJpaRepository.save(ConcertSeat(concertId = concert.id + 1, seatNumber = 1))
+        concertSeatJpaRepository.save(ConcertSeat(concertId = concert.id + 1, seatNumber = 2))
+
+        // when
+        val result = concertSeatRepositoryImpl.findAvailableSeats(concertSchedule.id)
+
+        // then
+        assertThat(result).hasSize(2)
+        assertThat(result[0]).isEqualTo(seat1)
+        assertThat(result[1]).isEqualTo(seat2)
+    }
+
     private fun createConcert(): Concert {
         return Instancio.of(Concert::class.java)
             .set(field(Concert::id), 0)

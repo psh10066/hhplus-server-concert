@@ -26,7 +26,10 @@ class ConcertSeatCustomRepositoryImpl(
                 reservation.concertSeatId.eq(concertSeat.id),
                 reservation.expiredAt.isNull.or(reservation.expiredAt.after(LocalDateTime.now(clock)))
             )
-            .where(reservation.isNull)
+            .where(
+                reservation.isNull,
+                concertSchedule.id.eq(concertScheduleId),
+            )
             .orderBy(concertSeat.seatNumber.asc())
             .fetch()
     }
