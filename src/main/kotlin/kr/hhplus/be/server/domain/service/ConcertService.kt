@@ -1,0 +1,46 @@
+package kr.hhplus.be.server.domain.service
+
+import kr.hhplus.be.server.domain.model.common.dto.PageDto
+import kr.hhplus.be.server.domain.model.concert.ConcertRepository
+import kr.hhplus.be.server.domain.model.concert.ConcertScheduleRepository
+import kr.hhplus.be.server.domain.model.concert.ConcertSeatRepository
+import kr.hhplus.be.server.domain.model.concert.dto.ConcertInfo
+import kr.hhplus.be.server.domain.model.concert.dto.ConcertScheduleInfo
+import kr.hhplus.be.server.domain.model.concert.dto.ConcertSeatInfo
+import org.springframework.stereotype.Service
+
+@Service
+class ConcertService(
+    private val concertRepository: ConcertRepository,
+    private val concertScheduleRepository: ConcertScheduleRepository,
+    private val concertSeatRepository: ConcertSeatRepository,
+) {
+
+    fun findPage(page: Int, size: Int): PageDto<ConcertInfo> {
+        return concertRepository.findPage(page, size).map { ConcertInfo.of(it) }
+    }
+
+    fun findConcertSchedules(concertId: Long): List<ConcertScheduleInfo> {
+        return concertScheduleRepository.findAvailablesByConcertId(concertId).map { ConcertScheduleInfo.of(it) }
+    }
+
+    fun findAvailableSeats(concertScheduleId: Long): List<ConcertSeatInfo> {
+        return concertSeatRepository.findAvailableSeats(concertScheduleId).map { ConcertSeatInfo.of(it) }
+    }
+
+    fun getConcertByScheduleId(concertScheduleId: Long): ConcertInfo {
+        val concertSchedule = concertScheduleRepository.getById(concertScheduleId)
+        val concert = concertRepository.getById(concertSchedule.concertId)
+        return ConcertInfo.of(concert)
+    }
+
+    fun getConcertSchedule(concertScheduleId: Long): ConcertScheduleInfo {
+        val concertSchedule = concertScheduleRepository.getById(concertScheduleId)
+        return ConcertScheduleInfo.of(concertSchedule)
+    }
+
+    fun getConcertSeat(concertSeatId: Long): ConcertSeatInfo {
+        val concertSeat = concertSeatRepository.getById(concertSeatId)
+        return ConcertSeatInfo.of(concertSeat)
+    }
+}

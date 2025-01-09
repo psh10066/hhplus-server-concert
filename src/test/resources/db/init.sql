@@ -1,0 +1,86 @@
+CREATE TABLE user (
+    id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    uuid BINARY(16) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL
+);
+
+CREATE TABLE user_wallet (
+    id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    balance BIGINT NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL
+);
+
+CREATE TABLE user_wallet_history (
+    id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    user_wallet_id BIGINT NOT NULL,
+    amount BIGINT NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL
+);
+
+CREATE TABLE queue (
+    id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    user_uuid BINARY(16) NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    expired_at DATETIME NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL
+);
+
+CREATE TABLE concert (
+    id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    price BIGINT NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL
+);
+
+CREATE TABLE concert_schedule (
+    id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    concert_id BIGINT NOT NULL,
+    start_time DATETIME NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL
+);
+
+CREATE TABLE concert_seat (
+    id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    concert_id BIGINT NOT NULL,
+    seat_number INT NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL
+);
+
+CREATE TABLE reservation (
+    id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    concert_schedule_id BIGINT NOT NULL,
+    concert_seat_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    expired_at DATETIME NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL
+);
+
+CREATE TABLE payment_history (
+    id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    reservation_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    amount BIGINT NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL
+);
+
+/**
+  id BIGINT [pk, not null] // 결제 이력 ID
+  reservation_id BIGINT [not null, ref: > reservation.id] // 예약 ID
+  user_id BIGINT [not null, ref: > user.id] // 유저 ID
+  amount BIGING [not null] // 결제 금액
+  created_at DATETIME [not null] // 생성 시각
+  updated_at DATETIME [not null] // 수정 시각
+ */
