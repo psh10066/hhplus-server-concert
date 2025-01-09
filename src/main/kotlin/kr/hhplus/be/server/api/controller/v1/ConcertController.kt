@@ -46,12 +46,10 @@ class ConcertController(
         @PathVariable concertScheduleId: Long,
         queueInfo: QueueInfo
     ): ApiResponse<GetConcertSeatResponse> {
+        val concertSeats = concertService.findAvailableSeats(concertScheduleId)
         return ApiResponse.success(
             GetConcertSeatResponse(
-                listOf(
-                    GetConcertSeatResponse.SeatDto(concertSeatId = 1L, seatNumber = 11),
-                    GetConcertSeatResponse.SeatDto(concertSeatId = 2L, seatNumber = 12),
-                )
+                concertSeats.map { GetConcertSeatResponse.SeatDto.of(it) }
             )
         )
     }
