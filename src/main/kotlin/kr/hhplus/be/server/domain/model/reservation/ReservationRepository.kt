@@ -6,4 +6,5 @@ interface ReservationRepository {
 
     fun save(reservation: Reservation): Reservation
 
+    fun getById(id: Long): Reservation
 }

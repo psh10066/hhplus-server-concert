@@ -71,6 +71,7 @@ class QueueInfoArgumentResolverTest {
             id = 1L,
             userUuid = UUID.randomUUID(),
             status = QueueStatus.ACTIVE,
+            token = "token:123",
             expiredAt = LocalDateTime.now().plusMinutes(10)
         )
         given(queueService.getActiveQueue(token)).willReturn(queueInfo)

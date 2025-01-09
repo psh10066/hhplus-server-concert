@@ -38,4 +38,12 @@ class UserService(
         userWalletRepository.save(userWallet)
         userWalletHistoryRepository.save(UserWalletHistory(userWalletId = userWallet.id, amount = amount))
     }
+
+    @Transactional
+    fun useBalance(userId: Long, amount: Long) {
+        val userWallet = userWalletRepository.getByUserIdWithLock(userId)
+        userWallet.use(amount)
+        userWalletRepository.save(userWallet)
+        userWalletHistoryRepository.save(UserWalletHistory(userWalletId = userWallet.id, amount = -amount))
+    }
 }

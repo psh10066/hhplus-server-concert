@@ -23,4 +23,14 @@ class ReservationService(
         reservationRepository.save(reservation)
         return reservation.id
     }
+
+    fun payReservation(id: Long): Reservation {
+        val reservation = reservationRepository.getById(id)
+        if (!reservation.isPayable(clock)) {
+            throw IllegalStateException("결제 가능한 예약이 아닙니다.")
+        }
+        reservation.pay()
+        reservationRepository.save(reservation)
+        return reservation
+    }
 }

@@ -64,4 +64,18 @@ class QueueTest {
         // then
         assertThat(queue.token).isEqualTo("${queue.userUuid}|${queue.status}|${queue.expiredAt}")
     }
+
+    @Test
+    fun `결제 준비 시 토큰 만료 시간을 5분 뒤로 설정한다`() {
+        // given
+        val now = LocalDateTime.now()
+        val clock = Clock.fixed(now.toInstant(ZoneOffset.UTC), ZoneOffset.UTC)
+        val queue = Instancio.create(Queue::class.java)
+
+        // when
+        queue.readyPayment(clock)
+
+        // then
+        assertThat(queue.expiredAt).isEqualTo(now.plusMinutes(5L))
+    }
 }

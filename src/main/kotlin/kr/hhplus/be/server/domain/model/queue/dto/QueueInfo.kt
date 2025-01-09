@@ -9,6 +9,7 @@ data class QueueInfo(
     val id: Long,
     val userUuid: UUID,
     val status: QueueStatus,
+    val token: String,
     val expiredAt: LocalDateTime,
 ) {
     companion object {
@@ -17,6 +18,7 @@ data class QueueInfo(
                 id = queue.id,
                 userUuid = queue.userUuid,
                 status = queue.status,
+                token = queue.token,
                 expiredAt = queue.expiredAt
             )
         }

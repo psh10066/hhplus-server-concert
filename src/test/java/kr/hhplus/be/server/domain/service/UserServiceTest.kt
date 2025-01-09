@@ -88,6 +88,38 @@ class UserServiceTest {
         assertThat(userWalletHistory.amount).isEqualTo(5000L)
     }
 
+    @Test
+    fun `사용자 잔고를 사용할 수 있다`() {
+        // given
+        val userWallet = createUserWallet(1L, 10000L)
+        given(userWalletRepository.getByUserIdWithLock(1L)).willReturn(userWallet)
+
+        // when
+        userService.useBalance(1L, 5000L)
+
+        // then
+        assertThat(userWallet.balance).isEqualTo(5000L)
+        verify(userWalletRepository).save(userWallet)
+    }
+
+    @Test
+    fun `사용자 잔고 사용 시 충전 이력을 사용할 수 있다`() {
+        // given
+        val userWallet = createUserWallet(1L, 10000L)
+        given(userWalletRepository.getByUserIdWithLock(1L)).willReturn(userWallet)
+
+        // when
+        userService.useBalance(1L, 5000L)
+
+        // then
+        val captor = argumentCaptor<UserWalletHistory>()
+        verify(userWalletHistoryRepository).save(captor.capture())
+
+        val userWalletHistory = captor.firstValue
+        assertThat(userWalletHistory.userWalletId).isEqualTo(userWallet.id)
+        assertThat(userWalletHistory.amount).isEqualTo(-5000L)
+    }
+
     private fun createUserWallet(userId: Long, balance: Long): UserWallet {
         return Instancio.of(UserWallet::class.java)
             .set(field(UserWallet::userId), userId)

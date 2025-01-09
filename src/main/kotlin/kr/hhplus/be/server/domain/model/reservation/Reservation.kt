@@ -19,9 +19,9 @@ class Reservation(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    val status: ReservationStatus,
+    var status: ReservationStatus,
 
-    val expiredAt: LocalDateTime? = null,
+    var expiredAt: LocalDateTime? = null,
 ) : BaseEntity() {
 
     companion object {
@@ -44,5 +44,14 @@ class Reservation(
             return true
         }
         return false
+    }
+
+    fun isPayable(clock: Clock): Boolean {
+        return status == ReservationStatus.BOOKED && expiredAt?.isAfter(LocalDateTime.now(clock)) == true
+    }
+
+    fun pay() {
+        status = ReservationStatus.PAYMENT_COMPLETED
+        expiredAt = null
     }
 }

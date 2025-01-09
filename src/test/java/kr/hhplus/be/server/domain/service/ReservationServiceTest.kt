@@ -57,4 +57,33 @@ class ReservationServiceTest {
         // then
         verify(reservationRepository).save(any())
     }
+
+    @Test
+    fun `콘서트 결제 시 해당 예약에 결제할 수 없으면 IllegalStateException이 발생한다`() {
+        // given
+        val reservation: Reservation = mock()
+        given(reservation.isPayable(any())).willReturn(false)
+        given(reservationRepository.getById(any())).willReturn(reservation)
+
+        // when then
+        assertThatThrownBy {
+            reservationService.payReservation(1L)
+        }
+            .isInstanceOf(IllegalStateException::class.java)
+            .hasMessage("결제 가능한 예약이 아닙니다.")
+    }
+
+    @Test
+    fun `콘서트 결제 시 해당 예약에 결제할 수 있으면 결제에 성공한다`() {
+        // given
+        val reservation: Reservation = mock()
+        given(reservation.isPayable(any())).willReturn(true)
+        given(reservationRepository.getById(any())).willReturn(reservation)
+
+        // when
+        reservationService.payReservation(1L)
+
+        // then
+        verify(reservationRepository).save(any())
+    }
 }

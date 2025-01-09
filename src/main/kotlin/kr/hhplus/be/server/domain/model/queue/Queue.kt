@@ -20,7 +20,7 @@ class Queue(
     var token: String,
 
     @Column(nullable = false)
-    val expiredAt: LocalDateTime,
+    var expiredAt: LocalDateTime,
 ) : BaseEntity() {
 
     companion object {
@@ -44,5 +44,9 @@ class Queue(
 
     fun isActive(): Boolean {
         return status == QueueStatus.ACTIVE
+    }
+
+    fun readyPayment(clock: Clock) {
+        expiredAt = LocalDateTime.now(clock).plusMinutes(5L)
     }
 }

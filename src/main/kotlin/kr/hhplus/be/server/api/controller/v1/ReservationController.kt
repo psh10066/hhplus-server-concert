@@ -1,6 +1,8 @@
 package kr.hhplus.be.server.api.controller.v1
 
+import kr.hhplus.be.server.api.controller.v1.request.ConcertPaymentRequest
 import kr.hhplus.be.server.api.controller.v1.request.ConcertReservationRequest
+import kr.hhplus.be.server.api.controller.v1.response.ConcertPaymentResponse
 import kr.hhplus.be.server.api.controller.v1.response.ConcertReservationResponse
 import kr.hhplus.be.server.application.ReservationFacade
 import kr.hhplus.be.server.domain.model.queue.dto.QueueInfo
@@ -22,10 +24,22 @@ class ReservationController(
         queueInfo: QueueInfo
     ): ApiResponse<ConcertReservationResponse> {
         val reservationId = reservationFacade.concertReservation(
-            userUuid = queueInfo.userUuid,
+            queueInfo = queueInfo,
             concertScheduleId = request.concertScheduleId,
             concertSeatId = request.concertSeatId
         )
         return ApiResponse.success(ConcertReservationResponse(reservationId = reservationId))
+    }
+
+    @PostMapping("/concert/payment")
+    fun concertPayment(
+        @RequestBody request: ConcertPaymentRequest,
+        queueInfo: QueueInfo
+    ): ApiResponse<ConcertPaymentResponse> {
+        val paymentHistoryId = reservationFacade.concertPayment(
+            queueInfo = queueInfo,
+            reservationId = request.reservationId
+        )
+        return ApiResponse.success(ConcertPaymentResponse(paymentHistoryId = paymentHistoryId))
     }
 }

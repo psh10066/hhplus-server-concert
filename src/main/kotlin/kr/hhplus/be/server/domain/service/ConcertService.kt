@@ -28,6 +28,12 @@ class ConcertService(
         return concertSeatRepository.findAvailableSeats(concertScheduleId).map { ConcertSeatInfo.of(it) }
     }
 
+    fun getConcertByScheduleId(concertScheduleId: Long): ConcertInfo {
+        val concertSchedule = concertScheduleRepository.getById(concertScheduleId)
+        val concert = concertRepository.getById(concertSchedule.concertId)
+        return ConcertInfo.of(concert)
+    }
+
     fun getConcertSchedule(concertScheduleId: Long): ConcertScheduleInfo {
         val concertSchedule = concertScheduleRepository.getById(concertScheduleId)
         return ConcertScheduleInfo.of(concertSchedule)

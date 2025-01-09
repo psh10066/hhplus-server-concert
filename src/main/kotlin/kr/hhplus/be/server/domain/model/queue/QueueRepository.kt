@@ -11,4 +11,6 @@ interface QueueRepository {
     fun getNotExpiredWithOrder(count: Int): List<Queue>
 
     fun findNotExpiredByToken(token: String): Queue?
+
+    fun deleteById(id: Long)
 }

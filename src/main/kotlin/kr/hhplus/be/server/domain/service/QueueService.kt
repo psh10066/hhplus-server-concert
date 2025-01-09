@@ -39,4 +39,17 @@ class QueueService(
         }
         return QueueInfo.of(queue)
     }
+
+    fun readyPayment(token: String) {
+        val queue = queueRepository.findNotExpiredByToken(token)
+        if (queue?.isActive() != true) {
+            throw IllegalArgumentException("활성화된 대기열이 아닙니다.")
+        }
+        queue.readyPayment(clock)
+        queueRepository.save(queue)
+    }
+
+    fun expire(id: Long) {
+        queueRepository.deleteById(id)
+    }
 }

@@ -66,3 +66,21 @@ CREATE TABLE reservation (
     created_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL
 );
+
+CREATE TABLE payment_history (
+    id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    reservation_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    amount BIGINT NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL
+);
+
+/**
+  id BIGINT [pk, not null] // 결제 이력 ID
+  reservation_id BIGINT [not null, ref: > reservation.id] // 예약 ID
+  user_id BIGINT [not null, ref: > user.id] // 유저 ID
+  amount BIGING [not null] // 결제 금액
+  created_at DATETIME [not null] // 생성 시각
+  updated_at DATETIME [not null] // 수정 시각
+ */

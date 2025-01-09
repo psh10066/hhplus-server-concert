@@ -43,4 +43,55 @@ class UserWalletTest {
         // then
         assertThat(userWallet.balance).isEqualTo(1000L)
     }
+
+    @Test
+    fun `0원은 사용할 수 없다`() {
+        // given
+        val userWallet = UserWallet(1L, 0L)
+
+        // when
+        assertThatThrownBy {
+            userWallet.use(0L)
+        }
+            .isInstanceOf(IllegalArgumentException::class.java)
+            .hasMessage("잘못된 사용 금액입니다.")
+    }
+
+    @Test
+    fun `마이너스 금액은 사용할 수 없다`() {
+        // given
+        val userWallet = UserWallet(1L, 0L)
+
+        // when
+        assertThatThrownBy {
+            userWallet.use(-1000L)
+        }
+            .isInstanceOf(IllegalArgumentException::class.java)
+            .hasMessage("잘못된 사용 금액입니다.")
+    }
+
+    @Test
+    fun `잔액이 부족하면 사용할 수 없다`() {
+        // given
+        val userWallet = UserWallet(1L, 0L)
+
+        // when
+        assertThatThrownBy {
+            userWallet.use(1000L)
+        }
+            .isInstanceOf(IllegalArgumentException::class.java)
+            .hasMessage("잔액이 부족합니다.")
+    }
+
+    @Test
+    fun `사용 금액 이상으로 잔액이 존재하면 사용할 수 없다`() {
+        // given
+        val userWallet = UserWallet(1L, 1000L)
+
+        // when
+        userWallet.use(1000L)
+
+        // then
+        assertThat(userWallet.balance).isEqualTo(0L)
+    }
 }

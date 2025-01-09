@@ -25,4 +25,8 @@ class QueueRepositoryImpl(
     override fun findNotExpiredByToken(token: String): Queue? {
         return queueJpaRepository.findNotExpiredByToken(token)
     }
+
+    override fun deleteById(id: Long) {
+        queueJpaRepository.deleteById(id)
+    }
 }
