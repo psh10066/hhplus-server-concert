@@ -19,7 +19,7 @@ import java.util.*
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
-abstract class RestDocsTest {
+abstract class ControllerIntegrationTest {
     protected val objectMapper = ObjectMapper()
 
     @Autowired

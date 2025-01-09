@@ -3,7 +3,7 @@ package kr.hhplus.be.server.api.controller.v1
 import com.epages.restdocs.apispec.ResourceDocumentation.resource
 import com.epages.restdocs.apispec.ResourceSnippetParameters
 import com.epages.restdocs.apispec.Schema
-import kr.hhplus.be.server.api.RestDocsTest
+import kr.hhplus.be.server.api.ControllerIntegrationTest
 import kr.hhplus.be.server.api.controller.v1.request.ConcertReservationRequest
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
@@ -14,7 +14,7 @@ import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-class ReservationControllerTest : RestDocsTest() {
+class ReservationControllerTest : ControllerIntegrationTest() {
 
     @Test
     fun concertReservation() {

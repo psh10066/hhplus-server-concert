@@ -3,7 +3,7 @@ package kr.hhplus.be.server.api.controller.v1
 import com.epages.restdocs.apispec.ResourceDocumentation.resource
 import com.epages.restdocs.apispec.ResourceSnippetParameters
 import com.epages.restdocs.apispec.Schema
-import kr.hhplus.be.server.api.RestDocsTest
+import kr.hhplus.be.server.api.ControllerIntegrationTest
 import org.junit.jupiter.api.Test
 import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
@@ -13,7 +13,7 @@ import org.springframework.restdocs.request.RequestDocumentation.parameterWithNa
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-class ConcertControllerTest : RestDocsTest() {
+class ConcertControllerTest : ControllerIntegrationTest() {
 
     @Test
     fun getSchedules() {

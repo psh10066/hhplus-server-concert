@@ -3,7 +3,7 @@ package kr.hhplus.be.server.api.controller.v1
 import com.epages.restdocs.apispec.ResourceDocumentation.resource
 import com.epages.restdocs.apispec.ResourceSnippetParameters
 import com.epages.restdocs.apispec.Schema
-import kr.hhplus.be.server.api.RestDocsTest
+import kr.hhplus.be.server.api.ControllerIntegrationTest
 import kr.hhplus.be.server.api.controller.v1.request.ChargeBalanceRequest
 import kr.hhplus.be.server.domain.model.user.UserWallet
 import kr.hhplus.be.server.infrastructure.dao.user.UserWalletJpaRepository
@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 class UserWalletControllerTest(
     @Autowired private val userWalletJpaRepository: UserWalletJpaRepository
-) : RestDocsTest() {
+) : ControllerIntegrationTest() {
 
     @BeforeEach
     fun setUp() {
