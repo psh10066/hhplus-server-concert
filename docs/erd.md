@@ -101,7 +101,7 @@ Table payment_history as "결제 이력" {
   id BIGINT [pk, not null] // 결제 이력 ID
   reservation_id BIGINT [not null, ref: > reservation.id] // 예약 ID
   user_id BIGINT [not null, ref: > user.id] // 유저 ID
-  amount BIGING [not null] // 결제 금액
+  amount BIGINT [not null] // 결제 금액
   created_at DATETIME [not null] // 생성 시각
   updated_at DATETIME [not null] // 수정 시각
 }
