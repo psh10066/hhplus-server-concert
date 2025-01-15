@@ -34,11 +34,10 @@ class Reservation(
         return false
     }
 
-    fun isPayable(clock: Clock): Boolean {
-        return status == ReservationStatus.BOOKED && expiredAt?.isAfter(LocalDateTime.now(clock)) == true
-    }
-
-    fun pay() {
+    fun pay(clock: Clock) {
+        if (status != ReservationStatus.BOOKED || expiredAt?.isAfter(LocalDateTime.now(clock)) != true) {
+            throw IllegalStateException("결제 가능한 예약이 아닙니다.")
+        }
         status = ReservationStatus.PAYMENT_COMPLETED
         expiredAt = null
     }

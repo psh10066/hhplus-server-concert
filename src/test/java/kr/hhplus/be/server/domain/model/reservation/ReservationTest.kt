@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.domain.model.reservation
 
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import java.time.Clock
 import java.time.LocalDateTime
@@ -82,7 +83,7 @@ class ReservationTest {
     }
 
     @Test
-    fun `결제 완료된 경우 결제 불가능 상태로 취급된다`() {
+    fun `콘서트 결제 시 이미 결제 완료된 예약인 경우 IllegalStateException이 발생한다`() {
         // given
         val reservation = Reservation(
             concertScheduleId = 1L,
@@ -91,33 +92,16 @@ class ReservationTest {
             status = ReservationStatus.PAYMENT_COMPLETED
         )
 
-        // when
-        val isPayable = reservation.isPayable(Clock.systemDefaultZone())
-
-        // then
-        assertThat(isPayable).isFalse()
+        // when then
+        assertThatThrownBy {
+            reservation.pay(Clock.systemDefaultZone())
+        }
+            .isInstanceOf(IllegalStateException::class.java)
+            .hasMessage("결제 가능한 예약이 아닙니다.")
     }
 
     @Test
-    fun `만료 시간이 지나지 않은 예약 상태의 경우 결제 가능 상태로 취급된다`() {
-        // given
-        val reservation = Reservation(
-            concertScheduleId = 1L,
-            concertSeatId = 2L,
-            userId = 3L,
-            status = ReservationStatus.BOOKED,
-            expiredAt = LocalDateTime.now().plusMinutes(1)
-        )
-
-        // when
-        val isPayable = reservation.isPayable(Clock.systemDefaultZone())
-
-        // then
-        assertThat(isPayable).isTrue()
-    }
-
-    @Test
-    fun `만료 시간이 지난 예약 상태의 경우 결제 불가능 상태로 취급된다`() {
+    fun `콘서트 결제 시 만료 시간이 지난 예약 상태의 경우 IllegalStateException이 발생한다`() {
         // given
         val reservation = Reservation(
             concertScheduleId = 1L,
@@ -127,11 +111,12 @@ class ReservationTest {
             expiredAt = LocalDateTime.now().minusMinutes(1)
         )
 
-        // when
-        val isPayable = reservation.isPayable(Clock.systemDefaultZone())
-
-        // then
-        assertThat(isPayable).isFalse()
+        // when then
+        assertThatThrownBy {
+            reservation.pay(Clock.systemDefaultZone())
+        }
+            .isInstanceOf(IllegalStateException::class.java)
+            .hasMessage("결제 가능한 예약이 아닙니다.")
     }
 
     @Test
@@ -146,7 +131,7 @@ class ReservationTest {
         )
 
         // when
-        reservation.pay()
+        reservation.pay(Clock.systemDefaultZone())
 
         // then
         assertThat(reservation.status).isEqualTo(ReservationStatus.PAYMENT_COMPLETED)
@@ -164,7 +149,7 @@ class ReservationTest {
         )
 
         // when
-        reservation.pay()
+        reservation.pay(Clock.systemDefaultZone())
 
         // then
         assertThat(reservation.expiredAt).isNull()
