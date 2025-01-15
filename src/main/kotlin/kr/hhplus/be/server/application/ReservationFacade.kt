@@ -14,6 +14,7 @@ class ReservationFacade(
     private val paymentService: PaymentService
 ) {
 
+    @Transactional
     fun concertReservation(queueInfo: QueueInfo, concertScheduleId: Long, concertSeatId: Long): Long {
         val user = userService.getUserInfo(queueInfo.userUuid)
         val concertSchedule = concertService.getConcertSchedule(concertScheduleId)
