@@ -12,12 +12,12 @@ class UserRepositoryImpl(
 ) : UserRepository {
 
     override fun getUserById(id: Long): User {
-        return userJpaRepository.findByIdOrNull(id)
+        return userJpaRepository.findByIdOrNull(id)?.toModel()
             ?: throw IllegalStateException("존재하지 않는 유저입니다.")
     }
 
     override fun getUserByUuid(uuid: UUID): User {
-        return userJpaRepository.findByUuid(uuid)
+        return userJpaRepository.findByUuid(uuid)?.toModel()
             ?: throw IllegalStateException("존재하지 않는 유저입니다.")
     }
 }

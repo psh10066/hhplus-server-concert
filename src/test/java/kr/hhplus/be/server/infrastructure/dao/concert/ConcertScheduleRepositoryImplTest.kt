@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.infrastructure.dao.concert
 
-import kr.hhplus.be.server.domain.model.concert.ConcertSchedule
 import kr.hhplus.be.server.helper.CleanUp
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -26,17 +25,17 @@ class ConcertScheduleRepositoryImplTest(
         // given
         val now = LocalDateTime.now()
 
-        concertScheduleJpaRepository.save(ConcertSchedule(concertId = 1L, startTime = now.minusMinutes(2)))
-        concertScheduleJpaRepository.save(ConcertSchedule(concertId = 1L, startTime = now.minusMinutes(1)))
-        val after1 = concertScheduleJpaRepository.save(ConcertSchedule(concertId = 1L, startTime = now.plusMinutes(1)))
-        val after2 = concertScheduleJpaRepository.save(ConcertSchedule(concertId = 1L, startTime = now.plusMinutes(2)))
+        concertScheduleJpaRepository.save(ConcertScheduleEntity(concertId = 1L, startTime = now.minusMinutes(2)))
+        concertScheduleJpaRepository.save(ConcertScheduleEntity(concertId = 1L, startTime = now.minusMinutes(1)))
+        val after1 = concertScheduleJpaRepository.save(ConcertScheduleEntity(concertId = 1L, startTime = now.plusMinutes(1)))
+        val after2 = concertScheduleJpaRepository.save(ConcertScheduleEntity(concertId = 1L, startTime = now.plusMinutes(2)))
 
         // when
         val result = concertScheduleRepositoryImpl.findAvailablesByConcertId(1L)
         
         // then
         assertThat(result).hasSize(2)
-        assertThat(result[0]).isEqualTo(after1)
-        assertThat(result[1]).isEqualTo(after2)
+        assertThat(result[0].id).isEqualTo(after1.id)
+        assertThat(result[1].id).isEqualTo(after2.id)
     }
 }

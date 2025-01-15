@@ -4,12 +4,7 @@ import com.epages.restdocs.apispec.ResourceDocumentation.resource
 import com.epages.restdocs.apispec.ResourceSnippetParameters
 import com.epages.restdocs.apispec.Schema
 import kr.hhplus.be.server.api.ControllerIntegrationTest
-import kr.hhplus.be.server.domain.model.concert.Concert
-import kr.hhplus.be.server.domain.model.concert.ConcertSchedule
-import kr.hhplus.be.server.domain.model.concert.ConcertSeat
-import kr.hhplus.be.server.infrastructure.dao.concert.ConcertJpaRepository
-import kr.hhplus.be.server.infrastructure.dao.concert.ConcertScheduleJpaRepository
-import kr.hhplus.be.server.infrastructure.dao.concert.ConcertSeatJpaRepository
+import kr.hhplus.be.server.infrastructure.dao.concert.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,7 +16,6 @@ import org.springframework.restdocs.request.RequestDocumentation.parameterWithNa
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 class ConcertControllerTest(
     @Autowired private val concertJpaRepository: ConcertJpaRepository,
@@ -31,12 +25,12 @@ class ConcertControllerTest(
 
     @BeforeEach
     fun setUp() {
-        concertJpaRepository.save(Concert(name = "아이유 콘서트", 150000L))
-        concertJpaRepository.save(Concert(name = "임영웅 콘서트", 130000L))
-        concertScheduleJpaRepository.save(ConcertSchedule(concertId = 1L, startTime = LocalDate.now().plusDays(1).atTime(11, 0)))
-        concertScheduleJpaRepository.save(ConcertSchedule(concertId = 1L, startTime = LocalDate.now().plusDays(2).atTime(12, 0)))
-        concertSeatJpaRepository.save(ConcertSeat(concertId = 1L, seatNumber = 1))
-        concertSeatJpaRepository.save(ConcertSeat(concertId = 1L, seatNumber = 2))
+        concertJpaRepository.save(ConcertEntity(name = "아이유 콘서트", price = 150000L))
+        concertJpaRepository.save(ConcertEntity(name = "임영웅 콘서트", price = 130000L))
+        concertScheduleJpaRepository.save(ConcertScheduleEntity(concertId = 1L, startTime = LocalDate.now().plusDays(1).atTime(11, 0)))
+        concertScheduleJpaRepository.save(ConcertScheduleEntity(concertId = 1L, startTime = LocalDate.now().plusDays(2).atTime(12, 0)))
+        concertSeatJpaRepository.save(ConcertSeatEntity(concertId = 1L, seatNumber = 1))
+        concertSeatJpaRepository.save(ConcertSeatEntity(concertId = 1L, seatNumber = 2))
     }
 
     @Test

@@ -10,6 +10,6 @@ class UserWalletHistoryRepositoryImpl(
 ) : UserWalletHistoryRepository {
 
     override fun save(userWalletHistory: UserWalletHistory): UserWalletHistory {
-        return userWalletHistoryJpaRepository.save(userWalletHistory)
+        return userWalletHistoryJpaRepository.save(UserWalletHistoryEntity.from(userWalletHistory)).toModel()
     }
 }

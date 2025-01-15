@@ -1,28 +1,16 @@
 package kr.hhplus.be.server.domain.model.reservation
 
-import jakarta.persistence.*
-import kr.hhplus.be.server.infrastructure.dao.BaseEntity
 import java.time.Clock
 import java.time.LocalDateTime
 
-@Entity
-@Table(name = "reservation")
 class Reservation(
-    @Column(nullable = false)
+    val id: Long = 0,
     val concertScheduleId: Long,
-
-    @Column(nullable = false)
     val concertSeatId: Long,
-
-    @Column(nullable = false)
     val userId: Long,
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     var status: ReservationStatus,
-
     var expiredAt: LocalDateTime? = null,
-) : BaseEntity() {
+) {
 
     companion object {
         fun book(clock: Clock, concertScheduleId: Long, concertSeatId: Long, userId: Long): Reservation {

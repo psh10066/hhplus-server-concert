@@ -11,11 +11,13 @@ class ConcertSeatRepositoryImpl(
 ) : ConcertSeatRepository {
 
     override fun findAvailableSeats(concertScheduleId: Long): List<ConcertSeat> {
-        return concertSeatJpaRepository.findAvailableSeats(concertScheduleId)
+        return concertSeatJpaRepository.findAvailableSeats(concertScheduleId).map {
+            it.toModel()
+        }
     }
 
     override fun getById(id: Long): ConcertSeat {
-        return concertSeatJpaRepository.findByIdOrNull(id)
+        return concertSeatJpaRepository.findByIdOrNull(id)?.toModel()
             ?: throw IllegalStateException("존재하지 않는 콘서트 좌석입니다.")
     }
 }

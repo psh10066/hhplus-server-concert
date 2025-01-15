@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.infrastructure.dao.user
 
-import kr.hhplus.be.server.domain.model.user.User
 import kr.hhplus.be.server.helper.CleanUp
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -23,7 +22,7 @@ class UserRepositoryImplTest(
     @Test
     fun `사용자를 조회할 수 있다`() {
         // given
-        userJpaRepository.save(User(name = "홍길동"))
+        userJpaRepository.save(UserEntity(name = "홍길동"))
 
         // when
         val result = userRepositoryImpl.getUserById(1L)

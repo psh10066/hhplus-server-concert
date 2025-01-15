@@ -6,16 +6,11 @@ import com.epages.restdocs.apispec.Schema
 import kr.hhplus.be.server.api.ControllerIntegrationTest
 import kr.hhplus.be.server.api.controller.v1.request.ConcertPaymentRequest
 import kr.hhplus.be.server.api.controller.v1.request.ConcertReservationRequest
-import kr.hhplus.be.server.domain.model.concert.Concert
-import kr.hhplus.be.server.domain.model.concert.ConcertSchedule
-import kr.hhplus.be.server.domain.model.concert.ConcertSeat
-import kr.hhplus.be.server.domain.model.reservation.Reservation
 import kr.hhplus.be.server.domain.model.reservation.ReservationStatus
-import kr.hhplus.be.server.domain.model.user.UserWallet
-import kr.hhplus.be.server.infrastructure.dao.concert.ConcertJpaRepository
-import kr.hhplus.be.server.infrastructure.dao.concert.ConcertScheduleJpaRepository
-import kr.hhplus.be.server.infrastructure.dao.concert.ConcertSeatJpaRepository
+import kr.hhplus.be.server.infrastructure.dao.concert.*
+import kr.hhplus.be.server.infrastructure.dao.reservation.ReservationEntity
 import kr.hhplus.be.server.infrastructure.dao.reservation.ReservationJpaRepository
+import kr.hhplus.be.server.infrastructure.dao.user.UserWalletEntity
 import kr.hhplus.be.server.infrastructure.dao.user.UserWalletJpaRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -39,13 +34,13 @@ class ReservationControllerTest(
 
     @BeforeEach
     fun setUp() {
-        userWalletJpaRepository.save(UserWallet(userId = 1L, balance = 1000000L))
-        concertJpaRepository.save(Concert(name = "아이유 콘서트", 150000L))
-        concertScheduleJpaRepository.save(ConcertSchedule(concertId = 1L, startTime = LocalDateTime.of(2025, 1, 8, 11, 0)))
-        concertSeatJpaRepository.save(ConcertSeat(concertId = 1L, seatNumber = 1))
-        concertSeatJpaRepository.save(ConcertSeat(concertId = 1L, seatNumber = 2))
-        concertSeatJpaRepository.save(ConcertSeat(concertId = 1L, seatNumber = 3))
-        reservationJpaRepository.save(Reservation(concertScheduleId = 1L, concertSeatId = 3L, userId = 1L, status = ReservationStatus.BOOKED, expiredAt = LocalDateTime.now().plusMinutes(3)))
+        userWalletJpaRepository.save(UserWalletEntity(userId = 1L, balance = 1000000L))
+        concertJpaRepository.save(ConcertEntity(name = "아이유 콘서트", price = 150000L))
+        concertScheduleJpaRepository.save(ConcertScheduleEntity(concertId = 1L, startTime = LocalDateTime.of(2025, 1, 8, 11, 0)))
+        concertSeatJpaRepository.save(ConcertSeatEntity(concertId = 1L, seatNumber = 1))
+        concertSeatJpaRepository.save(ConcertSeatEntity(concertId = 1L, seatNumber = 2))
+        concertSeatJpaRepository.save(ConcertSeatEntity(concertId = 1L, seatNumber = 3))
+        reservationJpaRepository.save(ReservationEntity(concertScheduleId = 1L, concertSeatId = 3L, userId = 1L, status = ReservationStatus.BOOKED, expiredAt = LocalDateTime.now().plusMinutes(3)))
     }
 
     @Test

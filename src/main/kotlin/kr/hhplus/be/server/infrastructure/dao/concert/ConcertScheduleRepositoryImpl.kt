@@ -14,11 +14,13 @@ class ConcertScheduleRepositoryImpl(
 ) : ConcertScheduleRepository {
 
     override fun findAvailablesByConcertId(concertId: Long): List<ConcertSchedule> {
-        return concertScheduleJpaRepository.findByConcertIdAndStartTimeAfter(concertId, LocalDateTime.now(clock))
+        return concertScheduleJpaRepository.findByConcertIdAndStartTimeAfter(concertId, LocalDateTime.now(clock)).map {
+            it.toModel()
+        }
     }
 
     override fun getById(id: Long): ConcertSchedule {
-        return concertScheduleJpaRepository.findByIdOrNull(id)
+        return concertScheduleJpaRepository.findByIdOrNull(id)?.toModel()
             ?: throw IllegalStateException("존재하지 않는 콘서트 날짜입니다.")
     }
 }

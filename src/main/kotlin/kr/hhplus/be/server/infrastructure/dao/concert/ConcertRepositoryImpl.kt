@@ -15,11 +15,13 @@ class ConcertRepositoryImpl(
 
     override fun findPage(page: Int, size: Int): PageDto<Concert> {
         val pageRequest = getOneBasedPageable(page, size)
-        return concertJpaRepository.findAll(pageRequest).toDto()
+        return concertJpaRepository.findAll(pageRequest).toDto().map {
+            it.toModel()
+        }
     }
 
     override fun getById(id: Long): Concert {
-        return concertJpaRepository.findByIdOrNull(id)
+        return concertJpaRepository.findByIdOrNull(id)?.toModel()
             ?: throw IllegalStateException("존재하지 않는 콘서트입니다.")
     }
 }

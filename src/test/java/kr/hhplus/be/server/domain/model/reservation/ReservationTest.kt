@@ -31,7 +31,12 @@ class ReservationTest {
     @Test
     fun `결제 완료된 경우 예약된 상태로 취급된다`() {
         // given
-        val reservation = Reservation(1L, 2L, 3L, ReservationStatus.PAYMENT_COMPLETED)
+        val reservation = Reservation(
+            concertScheduleId = 1L,
+            concertSeatId = 2L,
+            userId = 3L,
+            status = ReservationStatus.PAYMENT_COMPLETED
+        )
 
         // when
         val isBooked = reservation.isBooked(Clock.systemDefaultZone())
@@ -43,7 +48,13 @@ class ReservationTest {
     @Test
     fun `만료 시간이 지나지 않은 경우 예약된 상태로 취급된다`() {
         // given
-        val reservation = Reservation(1L, 2L, 3L, ReservationStatus.BOOKED, LocalDateTime.now().plusMinutes(1))
+        val reservation = Reservation(
+            concertScheduleId = 1L,
+            concertSeatId = 2L,
+            userId = 3L,
+            status = ReservationStatus.BOOKED,
+            expiredAt = LocalDateTime.now().plusMinutes(1)
+        )
 
         // when
         val isBooked = reservation.isBooked(Clock.systemDefaultZone())
@@ -55,7 +66,13 @@ class ReservationTest {
     @Test
     fun `만료 시간이 지난 경우 예약되지 않은 상태로 취급된다`() {
         // given
-        val reservation = Reservation(1L, 2L, 3L, ReservationStatus.BOOKED, LocalDateTime.now().minusMinutes(1))
+        val reservation = Reservation(
+            concertScheduleId = 1L,
+            concertSeatId = 2L,
+            userId = 3L,
+            status = ReservationStatus.BOOKED,
+            expiredAt = LocalDateTime.now().minusMinutes(1)
+        )
 
         // when
         val isBooked = reservation.isBooked(Clock.systemDefaultZone())
@@ -67,7 +84,12 @@ class ReservationTest {
     @Test
     fun `결제 완료된 경우 결제 불가능 상태로 취급된다`() {
         // given
-        val reservation = Reservation(1L, 2L, 3L, ReservationStatus.PAYMENT_COMPLETED)
+        val reservation = Reservation(
+            concertScheduleId = 1L,
+            concertSeatId = 2L,
+            userId = 3L,
+            status = ReservationStatus.PAYMENT_COMPLETED
+        )
 
         // when
         val isPayable = reservation.isPayable(Clock.systemDefaultZone())
@@ -79,7 +101,13 @@ class ReservationTest {
     @Test
     fun `만료 시간이 지나지 않은 예약 상태의 경우 결제 가능 상태로 취급된다`() {
         // given
-        val reservation = Reservation(1L, 2L, 3L, ReservationStatus.BOOKED, LocalDateTime.now().plusMinutes(1))
+        val reservation = Reservation(
+            concertScheduleId = 1L,
+            concertSeatId = 2L,
+            userId = 3L,
+            status = ReservationStatus.BOOKED,
+            expiredAt = LocalDateTime.now().plusMinutes(1)
+        )
 
         // when
         val isPayable = reservation.isPayable(Clock.systemDefaultZone())
@@ -91,7 +119,13 @@ class ReservationTest {
     @Test
     fun `만료 시간이 지난 예약 상태의 경우 결제 불가능 상태로 취급된다`() {
         // given
-        val reservation = Reservation(1L, 2L, 3L, ReservationStatus.BOOKED, LocalDateTime.now().minusMinutes(1))
+        val reservation = Reservation(
+            concertScheduleId = 1L,
+            concertSeatId = 2L,
+            userId = 3L,
+            status = ReservationStatus.BOOKED,
+            expiredAt = LocalDateTime.now().minusMinutes(1)
+        )
 
         // when
         val isPayable = reservation.isPayable(Clock.systemDefaultZone())
@@ -103,7 +137,13 @@ class ReservationTest {
     @Test
     fun `콘서트 결제 시 결제 상태로 변경된다`() {
         // given
-        val reservation = Reservation(1L, 2L, 3L, ReservationStatus.BOOKED, LocalDateTime.now().plusMinutes(1))
+        val reservation = Reservation(
+            concertScheduleId = 1L,
+            concertSeatId = 2L,
+            userId = 3L,
+            status = ReservationStatus.BOOKED,
+            expiredAt = LocalDateTime.now().plusMinutes(1)
+        )
 
         // when
         reservation.pay()
@@ -115,7 +155,13 @@ class ReservationTest {
     @Test
     fun `콘서트 결제 시 만료 시간이 제거된다`() {
         // given
-        val reservation = Reservation(1L, 2L, 3L, ReservationStatus.BOOKED, LocalDateTime.now().plusMinutes(1))
+        val reservation = Reservation(
+            concertScheduleId = 1L,
+            concertSeatId = 2L,
+            userId = 3L,
+            status = ReservationStatus.BOOKED,
+            expiredAt = LocalDateTime.now().plusMinutes(1)
+        )
 
         // when
         reservation.pay()

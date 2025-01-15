@@ -11,15 +11,17 @@ class ReservationRepositoryImpl(
 ) : ReservationRepository {
 
     override fun findConcertReservation(concertScheduleId: Long, concertSeatId: Long): List<Reservation> {
-        return reservationJpaRepository.findByConcertScheduleIdAndConcertSeatId(concertScheduleId, concertSeatId)
+        return reservationJpaRepository.findByConcertScheduleIdAndConcertSeatId(concertScheduleId, concertSeatId).map {
+            it.toModel()
+        }
     }
 
     override fun save(reservation: Reservation): Reservation {
-        return reservationJpaRepository.save(reservation)
+        return reservationJpaRepository.save(ReservationEntity.from(reservation)).toModel()
     }
 
     override fun getById(id: Long): Reservation {
-        return reservationJpaRepository.findByIdOrNull(id)
+        return reservationJpaRepository.findByIdOrNull(id)?.toModel()
             ?: throw IllegalStateException("존재하지 않는 예약입니다.")
     }
 }

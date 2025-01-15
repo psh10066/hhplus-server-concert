@@ -1,7 +1,5 @@
 package kr.hhplus.be.server.infrastructure.dao.user
 
-import kr.hhplus.be.server.domain.model.user.User
-import kr.hhplus.be.server.domain.model.user.UserWallet
 import kr.hhplus.be.server.helper.CleanUp
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -24,7 +22,7 @@ class UserWalletRepositoryImplTest(
     @Test
     fun `사용자의 지갑을 조회할 수 있다`() {
         // given
-        userWalletJpaRepository.save(UserWallet(userId = 2L, balance = 10000L))
+        userWalletJpaRepository.save(UserWalletEntity(userId = 2L, balance = 10000L))
 
         // when
         val result = userWalletRepositoryImpl.getByUserId(2L)
@@ -47,7 +45,7 @@ class UserWalletRepositoryImplTest(
     @Test
     fun `비관적 락과 함께 사용자의 지갑을 조회할 수 있다`() {
         // given
-        userWalletJpaRepository.save(UserWallet(userId = 2L, balance = 10000L))
+        userWalletJpaRepository.save(UserWalletEntity(userId = 2L, balance = 10000L))
 
         // when
         val result = userWalletRepositoryImpl.getByUserIdWithLock(2L)
