@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.model.user
 
+import kr.hhplus.be.server.support.error.CustomException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -15,7 +16,7 @@ class UserWalletTest {
         assertThatThrownBy {
             userWallet.charge(0L)
         }
-            .isInstanceOf(IllegalArgumentException::class.java)
+            .isInstanceOf(CustomException::class.java)
             .hasMessage("잘못된 충전 금액입니다.")
     }
 
@@ -28,7 +29,7 @@ class UserWalletTest {
         assertThatThrownBy {
             userWallet.charge(-1000L)
         }
-            .isInstanceOf(IllegalArgumentException::class.java)
+            .isInstanceOf(CustomException::class.java)
             .hasMessage("잘못된 충전 금액입니다.")
     }
 
@@ -53,7 +54,7 @@ class UserWalletTest {
         assertThatThrownBy {
             userWallet.use(0L)
         }
-            .isInstanceOf(IllegalArgumentException::class.java)
+            .isInstanceOf(CustomException::class.java)
             .hasMessage("잘못된 사용 금액입니다.")
     }
 
@@ -66,7 +67,7 @@ class UserWalletTest {
         assertThatThrownBy {
             userWallet.use(-1000L)
         }
-            .isInstanceOf(IllegalArgumentException::class.java)
+            .isInstanceOf(CustomException::class.java)
             .hasMessage("잘못된 사용 금액입니다.")
     }
 
@@ -79,7 +80,7 @@ class UserWalletTest {
         assertThatThrownBy {
             userWallet.use(1000L)
         }
-            .isInstanceOf(IllegalArgumentException::class.java)
+            .isInstanceOf(CustomException::class.java)
             .hasMessage("잔액이 부족합니다.")
     }
 

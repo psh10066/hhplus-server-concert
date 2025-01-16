@@ -3,6 +3,7 @@ package kr.hhplus.be.server.api.controller.v1.resolver
 import jakarta.servlet.http.HttpServletRequest
 import kr.hhplus.be.server.domain.model.user.User
 import kr.hhplus.be.server.domain.service.UserService
+import kr.hhplus.be.server.support.error.CustomException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
@@ -36,7 +37,7 @@ class UserArgumentResolverTest {
         assertThatThrownBy {
             userArgumentResolver.resolveArgument(mock(), mock(), webRequest, mock())
         }
-            .isInstanceOf(IllegalArgumentException::class.java)
+            .isInstanceOf(CustomException::class.java)
             .hasMessage("접근이 거부되었습니다.")
     }
 
@@ -46,13 +47,13 @@ class UserArgumentResolverTest {
         val httpServletRequest = MockHttpServletRequest()
         httpServletRequest.addHeader("userId", "1")
         given(webRequest.getNativeRequest(HttpServletRequest::class.java)).willReturn(httpServletRequest)
-        given(userService.getUser(1L)).willThrow(IllegalArgumentException::class.java)
+        given(userService.getUser(1L)).willThrow(CustomException::class.java)
 
         // when then
         assertThatThrownBy {
             userArgumentResolver.resolveArgument(mock(), mock(), webRequest, mock())
         }
-            .isInstanceOf(IllegalArgumentException::class.java)
+            .isInstanceOf(CustomException::class.java)
             .hasMessage("접근이 거부되었습니다.")
     }
 

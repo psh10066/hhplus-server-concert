@@ -1,5 +1,7 @@
 package kr.hhplus.be.server.domain.model.reservation
 
+import kr.hhplus.be.server.support.error.CustomException
+import kr.hhplus.be.server.support.error.ErrorType
 import java.time.Clock
 import java.time.LocalDateTime
 
@@ -36,7 +38,7 @@ class Reservation(
 
     fun pay(clock: Clock) {
         if (status != ReservationStatus.BOOKED || expiredAt?.isAfter(LocalDateTime.now(clock)) != true) {
-            throw IllegalStateException("결제 가능한 예약이 아닙니다.")
+            throw CustomException(ErrorType.NOT_PAYABLE_RESERVATION)
         }
         status = ReservationStatus.PAYMENT_COMPLETED
         expiredAt = null

@@ -2,6 +2,8 @@ package kr.hhplus.be.server.infrastructure.dao.reservation
 
 import kr.hhplus.be.server.domain.model.reservation.Reservation
 import kr.hhplus.be.server.domain.model.reservation.ReservationRepository
+import kr.hhplus.be.server.support.error.CustomException
+import kr.hhplus.be.server.support.error.ErrorType
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 
@@ -22,6 +24,6 @@ class ReservationRepositoryImpl(
 
     override fun getById(id: Long): Reservation {
         return reservationJpaRepository.findByIdOrNull(id)?.toModel()
-            ?: throw IllegalStateException("존재하지 않는 예약입니다.")
+            ?: throw CustomException(ErrorType.RESERVATION_NOT_FOUND)
     }
 }

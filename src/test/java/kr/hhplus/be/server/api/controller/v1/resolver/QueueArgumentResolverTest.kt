@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest
 import kr.hhplus.be.server.domain.model.queue.Queue
 import kr.hhplus.be.server.domain.model.queue.QueueStatus
 import kr.hhplus.be.server.domain.service.QueueService
+import kr.hhplus.be.server.support.error.CustomException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
@@ -38,7 +39,7 @@ class QueueArgumentResolverTest {
         assertThatThrownBy {
             queueArgumentResolver.resolveArgument(mock(), mock(), webRequest, mock())
         }
-            .isInstanceOf(IllegalArgumentException::class.java)
+            .isInstanceOf(CustomException::class.java)
             .hasMessage("접근이 거부되었습니다.")
     }
 
@@ -49,13 +50,13 @@ class QueueArgumentResolverTest {
         val token = "token:123"
         httpServletRequest.addHeader("token", token)
         given(webRequest.getNativeRequest(HttpServletRequest::class.java)).willReturn(httpServletRequest)
-        given(queueService.getActiveQueue(token)).willThrow(IllegalArgumentException::class.java)
+        given(queueService.getActiveQueue(token)).willThrow(CustomException::class.java)
 
         // when then
         assertThatThrownBy {
             queueArgumentResolver.resolveArgument(mock(), mock(), webRequest, mock())
         }
-            .isInstanceOf(IllegalArgumentException::class.java)
+            .isInstanceOf(CustomException::class.java)
             .hasMessage("접근이 거부되었습니다.")
     }
 

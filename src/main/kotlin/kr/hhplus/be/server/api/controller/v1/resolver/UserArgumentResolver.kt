@@ -3,6 +3,8 @@ package kr.hhplus.be.server.api.controller.v1.resolver
 import jakarta.servlet.http.HttpServletRequest
 import kr.hhplus.be.server.domain.model.user.User
 import kr.hhplus.be.server.domain.service.UserService
+import kr.hhplus.be.server.support.error.CustomException
+import kr.hhplus.be.server.support.error.ErrorType
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.support.WebDataBinderFactory
@@ -29,7 +31,7 @@ class UserArgumentResolver(
             val userId = request.getHeader("userId") ?: throw IllegalArgumentException()
             return userService.getUser(userId.toLong())
         } catch (e: Exception) {
-            throw IllegalArgumentException("접근이 거부되었습니다.")
+            throw CustomException(ErrorType.UNAUTHORIZED)
         }
     }
 }

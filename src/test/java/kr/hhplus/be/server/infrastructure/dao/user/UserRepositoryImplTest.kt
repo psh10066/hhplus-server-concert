@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.infrastructure.dao.user
 
 import kr.hhplus.be.server.helper.CleanUp
+import kr.hhplus.be.server.support.error.CustomException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
@@ -33,12 +34,12 @@ class UserRepositoryImplTest(
     }
 
     @Test
-    fun `사용자가 존재하지 않으면 IllegalStateException이 발생한다`() {
+    fun `사용자가 존재하지 않으면 CustomException이 발생한다`() {
         // when then
         assertThatThrownBy {
             userRepositoryImpl.getUserById(1L)
         }
-            .isInstanceOf(IllegalStateException::class.java)
+            .isInstanceOf(CustomException::class.java)
             .hasMessage("존재하지 않는 유저입니다.")
     }
 }

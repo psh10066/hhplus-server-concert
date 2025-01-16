@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.model.reservation
 
+import kr.hhplus.be.server.support.error.CustomException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -83,7 +84,7 @@ class ReservationTest {
     }
 
     @Test
-    fun `콘서트 결제 시 이미 결제 완료된 예약인 경우 IllegalStateException이 발생한다`() {
+    fun `콘서트 결제 시 이미 결제 완료된 예약인 경우 CustomException이 발생한다`() {
         // given
         val reservation = Reservation(
             concertScheduleId = 1L,
@@ -96,12 +97,12 @@ class ReservationTest {
         assertThatThrownBy {
             reservation.pay(Clock.systemDefaultZone())
         }
-            .isInstanceOf(IllegalStateException::class.java)
+            .isInstanceOf(CustomException::class.java)
             .hasMessage("결제 가능한 예약이 아닙니다.")
     }
 
     @Test
-    fun `콘서트 결제 시 만료 시간이 지난 예약 상태의 경우 IllegalStateException이 발생한다`() {
+    fun `콘서트 결제 시 만료 시간이 지난 예약 상태의 경우 CustomException이 발생한다`() {
         // given
         val reservation = Reservation(
             concertScheduleId = 1L,
@@ -115,7 +116,7 @@ class ReservationTest {
         assertThatThrownBy {
             reservation.pay(Clock.systemDefaultZone())
         }
-            .isInstanceOf(IllegalStateException::class.java)
+            .isInstanceOf(CustomException::class.java)
             .hasMessage("결제 가능한 예약이 아닙니다.")
     }
 

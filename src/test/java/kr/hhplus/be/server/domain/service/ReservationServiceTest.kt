@@ -2,6 +2,7 @@ package kr.hhplus.be.server.domain.service
 
 import kr.hhplus.be.server.domain.model.reservation.Reservation
 import kr.hhplus.be.server.domain.model.reservation.ReservationRepository
+import kr.hhplus.be.server.support.error.CustomException
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -23,7 +24,7 @@ class ReservationServiceTest {
     }
 
     @Test
-    fun `콘서트 예약 시 해당 좌석에 이미 예약이 있으면 IllegalStateException이 발생한다`() {
+    fun `콘서트 예약 시 해당 좌석에 이미 예약이 있으면 CustomException이 발생한다`() {
         // given
         val reservation1: Reservation = mock()
         val reservation2: Reservation = mock()
@@ -37,7 +38,7 @@ class ReservationServiceTest {
         assertThatThrownBy {
             reservationService.concertReservation(1L, 2L, 3L)
         }
-            .isInstanceOf(IllegalStateException::class.java)
+            .isInstanceOf(CustomException::class.java)
             .hasMessage("이미 예약된 좌석입니다.")
     }
 

@@ -2,6 +2,8 @@ package kr.hhplus.be.server.infrastructure.dao.user
 
 import kr.hhplus.be.server.domain.model.user.UserWallet
 import kr.hhplus.be.server.domain.model.user.UserWalletRepository
+import kr.hhplus.be.server.support.error.CustomException
+import kr.hhplus.be.server.support.error.ErrorType
 import org.springframework.stereotype.Component
 
 @Component
@@ -11,12 +13,12 @@ class UserWalletRepositoryImpl(
 
     override fun getByUserId(userId: Long): UserWallet {
         return userWalletJpaRepository.findByUserId(userId)?.toModel()
-            ?: throw IllegalStateException("존재하지 않는 지갑입니다.")
+            ?: throw CustomException(ErrorType.USER_WALLET_NOT_FOUND)
     }
 
     override fun getByUserIdWithLock(userId: Long): UserWallet {
         return userWalletJpaRepository.findForUpdateByUserId(userId)?.toModel()
-            ?: throw IllegalStateException("존재하지 않는 지갑입니다.")
+            ?: throw CustomException(ErrorType.USER_WALLET_NOT_FOUND)
     }
 
     override fun save(userWallet: UserWallet): UserWallet {

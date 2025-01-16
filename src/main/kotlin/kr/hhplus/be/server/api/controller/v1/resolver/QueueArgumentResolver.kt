@@ -3,6 +3,8 @@ package kr.hhplus.be.server.api.controller.v1.resolver
 import jakarta.servlet.http.HttpServletRequest
 import kr.hhplus.be.server.domain.model.queue.Queue
 import kr.hhplus.be.server.domain.service.QueueService
+import kr.hhplus.be.server.support.error.CustomException
+import kr.hhplus.be.server.support.error.ErrorType
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.support.WebDataBinderFactory
@@ -29,7 +31,7 @@ class QueueArgumentResolver(
             val token = request.getHeader("token") ?: throw IllegalArgumentException()
             return queueService.getActiveQueue(token)
         } catch (e: Exception) {
-            throw IllegalArgumentException("접근이 거부되었습니다.")
+            throw CustomException(ErrorType.UNAUTHORIZED)
         }
     }
 }

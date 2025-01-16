@@ -4,6 +4,7 @@ import kr.hhplus.be.server.domain.model.queue.Queue
 import kr.hhplus.be.server.domain.model.queue.QueueRepository
 import kr.hhplus.be.server.domain.model.queue.QueueStatus
 import kr.hhplus.be.server.helper.KSelect.Companion.field
+import kr.hhplus.be.server.support.error.CustomException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.instancio.Instancio
@@ -78,7 +79,7 @@ class QueueServiceTest {
     }
 
     @Test
-    fun `토큰으로 조회한 대기열이 없으면 IllegalArgumentException이 발생한다`() {
+    fun `토큰으로 조회한 대기열이 없으면 CustomException이 발생한다`() {
         // given
         val token = "token"
         given(queueRepository.findNotExpiredByToken(token)).willReturn(null)
@@ -87,12 +88,12 @@ class QueueServiceTest {
         assertThatThrownBy {
             queueService.getActiveQueue(token)
         }
-            .isInstanceOf(IllegalArgumentException::class.java)
+            .isInstanceOf(CustomException::class.java)
             .hasMessage("활성화된 대기열이 아닙니다.")
     }
 
     @Test
-    fun `토큰으로 조회한 대기열이 활성 상태가 아니면 IllegalArgumentException이 발생한다`() {
+    fun `토큰으로 조회한 대기열이 활성 상태가 아니면 CustomException이 발생한다`() {
         // given
         val token = "token"
         val queue = createQueueWithStatus(QueueStatus.WAITING)
@@ -102,7 +103,7 @@ class QueueServiceTest {
         assertThatThrownBy {
             queueService.getActiveQueue(token)
         }
-            .isInstanceOf(IllegalArgumentException::class.java)
+            .isInstanceOf(CustomException::class.java)
             .hasMessage("활성화된 대기열이 아닙니다.")
     }
 

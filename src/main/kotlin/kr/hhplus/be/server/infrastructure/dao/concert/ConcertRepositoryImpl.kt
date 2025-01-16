@@ -5,6 +5,8 @@ import kr.hhplus.be.server.domain.model.concert.Concert
 import kr.hhplus.be.server.domain.model.concert.ConcertRepository
 import kr.hhplus.be.server.infrastructure.dao.common.getOneBasedPageable
 import kr.hhplus.be.server.infrastructure.dao.common.toDto
+import kr.hhplus.be.server.support.error.CustomException
+import kr.hhplus.be.server.support.error.ErrorType
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 
@@ -22,6 +24,6 @@ class ConcertRepositoryImpl(
 
     override fun getById(id: Long): Concert {
         return concertJpaRepository.findByIdOrNull(id)?.toModel()
-            ?: throw IllegalStateException("존재하지 않는 콘서트입니다.")
+            ?: throw CustomException(ErrorType.CONCERT_NOT_FOUND)
     }
 }

@@ -4,6 +4,8 @@ import kr.hhplus.be.server.domain.model.queue.ACTIVE_TOKEN_COUNT
 import kr.hhplus.be.server.domain.model.queue.Queue
 import kr.hhplus.be.server.domain.model.queue.QueueRepository
 import kr.hhplus.be.server.domain.model.queue.QueueStatus
+import kr.hhplus.be.server.support.error.CustomException
+import kr.hhplus.be.server.support.error.ErrorType
 import org.springframework.stereotype.Service
 import java.time.Clock
 import java.util.*
@@ -34,7 +36,7 @@ class QueueService(
     fun getActiveQueue(token: String): Queue {
         val queue = queueRepository.findNotExpiredByToken(token)
         if (queue?.isActive() != true) {
-            throw IllegalArgumentException("활성화된 대기열이 아닙니다.")
+            throw CustomException(ErrorType.NOT_AN_ACTIVE_QUEUE)
         }
         return queue
     }
@@ -42,7 +44,7 @@ class QueueService(
     fun readyPayment(token: String) {
         val queue = queueRepository.findNotExpiredByToken(token)
         if (queue?.isActive() != true) {
-            throw IllegalArgumentException("활성화된 대기열이 아닙니다.")
+            throw CustomException(ErrorType.NOT_AN_ACTIVE_QUEUE)
         }
         queue.readyPayment(clock)
         queueRepository.save(queue)
