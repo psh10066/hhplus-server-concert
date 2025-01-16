@@ -29,8 +29,8 @@ class ConcertControllerTest(
         concertJpaRepository.save(ConcertEntity(name = "임영웅 콘서트", price = 130000L))
         concertScheduleJpaRepository.save(ConcertScheduleEntity(concertId = 1L, startTime = LocalDate.now().plusDays(1).atTime(11, 0)))
         concertScheduleJpaRepository.save(ConcertScheduleEntity(concertId = 1L, startTime = LocalDate.now().plusDays(2).atTime(12, 0)))
-        concertSeatJpaRepository.save(ConcertSeatEntity(concertId = 1L, seatNumber = 1))
-        concertSeatJpaRepository.save(ConcertSeatEntity(concertId = 1L, seatNumber = 2))
+        concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 1))
+        concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 2))
     }
 
     @Test

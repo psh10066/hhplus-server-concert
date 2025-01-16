@@ -33,13 +33,12 @@ class ConcertSeatRepositoryImplTest(
         // given
         val concert = concertJpaRepository.save(createConcertEntity())
         val concertSchedule = concertScheduleJpaRepository.save(createConcertScheduleEntity(concert.id))
-        val seat1 = concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id, seatNumber = 1))
-        val seat2 = concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id, seatNumber = 2))
-        val seat3 = concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id, seatNumber = 3))
-        val seat4 = concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id, seatNumber = 3))
+        val seat1 = concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = concertSchedule.id, seatNumber = 1))
+        val seat2 = concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = concertSchedule.id, seatNumber = 2))
+        val seat3 = concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = concertSchedule.id, seatNumber = 3))
+        val seat4 = concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = concertSchedule.id, seatNumber = 3))
         reservationJpaRepository.save(
             ReservationEntity(
-                concertScheduleId = concertSchedule.id,
                 concertSeatId = seat1.id,
                 userId = 1L,
                 status = ReservationStatus.PAYMENT_COMPLETED
@@ -47,7 +46,6 @@ class ConcertSeatRepositoryImplTest(
         )
         reservationJpaRepository.save(
             ReservationEntity(
-                concertScheduleId = concertSchedule.id,
                 concertSeatId = seat2.id,
                 userId = 1L,
                 status = ReservationStatus.BOOKED,
@@ -69,12 +67,11 @@ class ConcertSeatRepositoryImplTest(
         // given
         val concert = concertJpaRepository.save(createConcertEntity())
         val concertSchedule = concertScheduleJpaRepository.save(createConcertScheduleEntity(concert.id))
-        val seat1 = concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id, seatNumber = 1))
-        val seat2 = concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id, seatNumber = 2))
-        val seat3 = concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id, seatNumber = 3))
+        val seat1 = concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = concertSchedule.id, seatNumber = 1))
+        val seat2 = concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = concertSchedule.id, seatNumber = 2))
+        val seat3 = concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = concertSchedule.id, seatNumber = 3))
         reservationJpaRepository.save(
             ReservationEntity(
-                concertScheduleId = concertSchedule.id,
                 concertSeatId = seat1.id,
                 userId = 1L,
                 status = ReservationStatus.BOOKED,
@@ -83,7 +80,6 @@ class ConcertSeatRepositoryImplTest(
         )
         reservationJpaRepository.save(
             ReservationEntity(
-                concertScheduleId = concertSchedule.id,
                 concertSeatId = seat1.id,
                 userId = 2L,
                 status = ReservationStatus.BOOKED,
@@ -106,10 +102,10 @@ class ConcertSeatRepositoryImplTest(
         // given
         val concert = concertJpaRepository.save(createConcertEntity())
         val concertSchedule = concertScheduleJpaRepository.save(createConcertScheduleEntity(concert.id))
-        val seat1 = concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id, seatNumber = 1))
-        val seat2 = concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id, seatNumber = 2))
-        concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id + 1, seatNumber = 1))
-        concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id + 1, seatNumber = 2))
+        val seat1 = concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = concertSchedule.id, seatNumber = 1))
+        val seat2 = concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = concertSchedule.id, seatNumber = 2))
+        concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = concertSchedule.id + 1, seatNumber = 1))
+        concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = concertSchedule.id + 1, seatNumber = 2))
 
         // when
         val result = concertSeatRepositoryImpl.findAvailableSeats(concertSchedule.id)

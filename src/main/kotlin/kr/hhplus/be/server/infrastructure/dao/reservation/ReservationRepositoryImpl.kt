@@ -12,8 +12,8 @@ class ReservationRepositoryImpl(
     private val reservationJpaRepository: ReservationJpaRepository
 ) : ReservationRepository {
 
-    override fun findConcertReservation(concertScheduleId: Long, concertSeatId: Long): List<Reservation> {
-        return reservationJpaRepository.findByConcertScheduleIdAndConcertSeatId(concertScheduleId, concertSeatId).map {
+    override fun findConcertReservation(concertSeatId: Long): List<Reservation> {
+        return reservationJpaRepository.findByConcertSeatId(concertSeatId).map {
             it.toModel()
         }
     }

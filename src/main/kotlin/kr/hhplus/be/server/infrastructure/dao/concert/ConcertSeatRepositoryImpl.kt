@@ -22,4 +22,9 @@ class ConcertSeatRepositoryImpl(
         return concertSeatJpaRepository.findByIdOrNull(id)?.toModel()
             ?: throw CustomException(ErrorType.CONCERT_SEAT_NOT_FOUND)
     }
+
+    override fun getByIdWithLock(id: Long): ConcertSeat {
+        return concertSeatJpaRepository.findForUpdateById(id)?.toModel()
+            ?: throw CustomException(ErrorType.CONCERT_SEAT_NOT_FOUND)
+    }
 }

@@ -12,9 +12,6 @@ class ReservationEntity(
     id: Long = 0,
 
     @Column(nullable = false)
-    val concertScheduleId: Long,
-
-    @Column(nullable = false)
     val concertSeatId: Long,
 
     @Column(nullable = false)
@@ -30,7 +27,6 @@ class ReservationEntity(
     fun toModel(): Reservation {
         return Reservation(
             id = id,
-            concertScheduleId = concertScheduleId,
             concertSeatId = concertSeatId,
             userId = userId,
             status = status,
@@ -42,7 +38,6 @@ class ReservationEntity(
         fun from(reservation: Reservation): ReservationEntity {
             return ReservationEntity(
                 id = reservation.id,
-                concertScheduleId = reservation.concertScheduleId,
                 concertSeatId = reservation.concertSeatId,
                 userId = reservation.userId,
                 status = reservation.status,

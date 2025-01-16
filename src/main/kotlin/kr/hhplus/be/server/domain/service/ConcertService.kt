@@ -23,16 +23,13 @@ class ConcertService(
         return concertSeatRepository.findAvailableSeats(concertScheduleId)
     }
 
-    fun getConcertByScheduleId(concertScheduleId: Long): Concert {
-        val concertSchedule = concertScheduleRepository.getById(concertScheduleId)
+    fun getConcertBySeatId(concertSeatId: Long): Concert {
+        val concertSeat = concertSeatRepository.getById(concertSeatId)
+        val concertSchedule = concertScheduleRepository.getById(concertSeat.concertScheduleId)
         return concertRepository.getById(concertSchedule.concertId)
     }
 
-    fun getConcertSchedule(concertScheduleId: Long): ConcertSchedule {
-        return concertScheduleRepository.getById(concertScheduleId)
-    }
-
-    fun getConcertSeat(concertSeatId: Long): ConcertSeat {
-        return concertSeatRepository.getById(concertSeatId)
+    fun getConcertSeatWithLock(concertSeatId: Long): ConcertSeat {
+        return concertSeatRepository.getByIdWithLock(concertSeatId)
     }
 }

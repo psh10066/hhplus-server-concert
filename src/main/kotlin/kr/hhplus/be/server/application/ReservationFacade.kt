@@ -3,6 +3,7 @@ package kr.hhplus.be.server.application
 import kr.hhplus.be.server.domain.model.queue.Queue
 import kr.hhplus.be.server.domain.service.*
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 
 @Component
@@ -14,14 +15,12 @@ class ReservationFacade(
     private val paymentService: PaymentService
 ) {
 
-    @Transactional
-    fun concertReservation(queue: Queue, concertScheduleId: Long, concertSeatId: Long): Long {
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    fun concertReservation(queue: Queue, concertSeatId: Long): Long {
         val user = userService.getUser(queue.userUuid)
-        val concertSchedule = concertService.getConcertSchedule(concertScheduleId)
-        val concertSeat = concertService.getConcertSeat(concertSeatId)
+        val concertSeat = concertService.getConcertSeatWithLock(concertSeatId)
         val reservationId = reservationService.concertReservation(
             userId = user.id,
-            concertScheduleId = concertSchedule.id,
             concertSeatId = concertSeat.id
         )
         queueService.readyPayment(queue.token)
@@ -32,7 +31,7 @@ class ReservationFacade(
     fun concertPayment(queue: Queue, reservationId: Long): Long {
         val user = userService.getUser(queue.userUuid)
         val reservation = reservationService.payReservation(reservationId)
-        val concert = concertService.getConcertByScheduleId(reservation.concertScheduleId)
+        val concert = concertService.getConcertBySeatId(reservation.concertSeatId)
 
         userService.useBalance(userId = user.id, amount = concert.price)
         val paymentHistory = paymentService.pay(reservationId = reservation.id, userId = user.id, amount = concert.price)

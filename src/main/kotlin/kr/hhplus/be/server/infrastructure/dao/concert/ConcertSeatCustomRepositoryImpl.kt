@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.infrastructure.dao.concert
 
 import com.querydsl.jpa.impl.JPAQueryFactory
-import kr.hhplus.be.server.infrastructure.dao.concert.QConcertEntity.concertEntity
 import kr.hhplus.be.server.infrastructure.dao.concert.QConcertScheduleEntity.concertScheduleEntity
 import kr.hhplus.be.server.infrastructure.dao.concert.QConcertSeatEntity.concertSeatEntity
 import kr.hhplus.be.server.infrastructure.dao.reservation.QReservationEntity.reservationEntity
@@ -17,10 +16,8 @@ class ConcertSeatCustomRepositoryImpl(
         return queryFactory
             .select(concertSeatEntity)
             .from(concertScheduleEntity)
-            .join(concertEntity).on(concertEntity.id.eq(concertScheduleEntity.concertId))
-            .join(concertSeatEntity).on(concertSeatEntity.concertId.eq(concertEntity.id))
+            .join(concertSeatEntity).on(concertSeatEntity.concertScheduleId.eq(concertScheduleEntity.id))
             .leftJoin(reservationEntity).on(
-                reservationEntity.concertScheduleId.eq(concertScheduleEntity.id),
                 reservationEntity.concertSeatId.eq(concertSeatEntity.id),
                 reservationEntity.expiredAt.isNull.or(reservationEntity.expiredAt.after(LocalDateTime.now(clock)))
             )

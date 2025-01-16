@@ -38,6 +38,21 @@ class UserServiceConcurrencyIT(
         assertThat(userWallet.balance).isEqualTo(500L)
     }
 
+    @Test
+    fun `동시에 5번 사용 요청 시 문제없이 충전되어야 한다`() {
+        // given
+        userWalletJpaRepository.save(UserWalletEntity(userId = 1L, balance = 500L))
+
+        // when
+        concurrencyTestHelper(5, Runnable {
+            userService.useBalance(1L, 100L)
+        })
+
+        // then
+        val userWallet = userWalletJpaRepository.findByUserId(1)!!
+        assertThat(userWallet.balance).isEqualTo(0L)
+    }
+
     private fun concurrencyTestHelper(times: Int, vararg tasks: Runnable) {
         val executorService = Executors.newFixedThreadPool(times * tasks.size)
         try {

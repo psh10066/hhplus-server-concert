@@ -12,7 +12,7 @@ class ConcertSeatEntity(
     id: Long = 0,
 
     @Column(nullable = false)
-    val concertId: Long,
+    val concertScheduleId: Long,
 
     @Column(nullable = false)
     val seatNumber: Int,
@@ -21,7 +21,7 @@ class ConcertSeatEntity(
     fun toModel(): ConcertSeat {
         return ConcertSeat(
             id = id,
-            concertId = concertId,
+            concertScheduleId = concertScheduleId,
             seatNumber = seatNumber,
         )
     }
@@ -30,7 +30,7 @@ class ConcertSeatEntity(
         fun from(concertSeat: ConcertSeat): ConcertSeatEntity {
             return ConcertSeatEntity(
                 id = concertSeat.id,
-                concertId = concertSeat.concertId,
+                concertScheduleId = concertSeat.concertScheduleId,
                 seatNumber = concertSeat.seatNumber,
             )
         }
