@@ -22,6 +22,8 @@
 
 ### 1. [Filter & Interceptor](docs/filter-interceptor.md)
 
+### 2. [동시성 제어 방식 분석 보고서](docs/concurrency-control.md)
+
 ## Getting Started
 
 ### Prerequisites
