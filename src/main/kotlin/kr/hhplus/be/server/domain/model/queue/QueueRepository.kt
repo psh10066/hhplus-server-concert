@@ -4,7 +4,7 @@ import java.util.*
 
 interface QueueRepository {
 
-    fun findByUserUuid(userUuid: UUID): Queue?
+    fun findNotExpiredByUserUuid(userUuid: UUID): Queue?
 
     fun save(queue: Queue): Queue
 

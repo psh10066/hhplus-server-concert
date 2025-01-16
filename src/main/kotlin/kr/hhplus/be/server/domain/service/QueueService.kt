@@ -17,7 +17,7 @@ class QueueService(
 ) {
 
     fun issueToken(userUuid: UUID): String {
-        val queue = queueRepository.findByUserUuid(userUuid) ?: run {
+        val queue = queueRepository.findNotExpiredByUserUuid(userUuid) ?: run {
             val createdQueue = Queue.create(clock, userUuid)
             queueRepository.save(createdQueue)
         }

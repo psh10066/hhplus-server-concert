@@ -33,7 +33,7 @@ class QueueServiceTest {
     fun `존재하는 대기열 토큰이 없으면 토큰을 생성하여 반환한다`() {
         // given
         val uuid = UUID.randomUUID()
-        given(queueRepository.findByUserUuid(uuid)).willReturn(null)
+        given(queueRepository.findNotExpiredByUserUuid(uuid)).willReturn(null)
         val queue = createQueue(uuid)
         given(queueRepository.save(any())).willReturn(queue)
 
@@ -49,7 +49,7 @@ class QueueServiceTest {
         // given
         val uuid = UUID.randomUUID()
         val queue = createQueue(uuid)
-        given(queueRepository.findByUserUuid(uuid)).willReturn(queue)
+        given(queueRepository.findNotExpiredByUserUuid(uuid)).willReturn(queue)
 
         // when
         val result = queueService.issueToken(uuid)
