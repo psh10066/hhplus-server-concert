@@ -4,7 +4,6 @@ import kr.hhplus.be.server.domain.model.queue.ACTIVE_TOKEN_COUNT
 import kr.hhplus.be.server.domain.model.queue.Queue
 import kr.hhplus.be.server.domain.model.queue.QueueRepository
 import kr.hhplus.be.server.domain.model.queue.QueueStatus
-import kr.hhplus.be.server.domain.model.queue.dto.QueueInfo
 import org.springframework.stereotype.Service
 import java.time.Clock
 import java.util.*
@@ -32,12 +31,12 @@ class QueueService(
             }
     }
 
-    fun getActiveQueue(token: String): QueueInfo {
+    fun getActiveQueue(token: String): Queue {
         val queue = queueRepository.findNotExpiredByToken(token)
         if (queue?.isActive() != true) {
             throw IllegalArgumentException("활성화된 대기열이 아닙니다.")
         }
-        return QueueInfo.of(queue)
+        return queue
     }
 
     fun readyPayment(token: String) {

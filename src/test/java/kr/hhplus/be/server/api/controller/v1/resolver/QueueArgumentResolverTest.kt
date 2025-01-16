@@ -1,8 +1,8 @@
 package kr.hhplus.be.server.api.controller.v1.resolver
 
 import jakarta.servlet.http.HttpServletRequest
+import kr.hhplus.be.server.domain.model.queue.Queue
 import kr.hhplus.be.server.domain.model.queue.QueueStatus
-import kr.hhplus.be.server.domain.model.queue.dto.QueueInfo
 import kr.hhplus.be.server.domain.service.QueueService
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -15,17 +15,17 @@ import org.springframework.web.context.request.NativeWebRequest
 import java.time.LocalDateTime
 import java.util.*
 
-class QueueInfoArgumentResolverTest {
+class QueueArgumentResolverTest {
 
     private lateinit var webRequest: NativeWebRequest
     private lateinit var queueService: QueueService
-    private lateinit var queueInfoArgumentResolver: QueueInfoArgumentResolver
+    private lateinit var queueArgumentResolver: QueueArgumentResolver
 
     @BeforeEach
     fun setUp() {
         webRequest = mock()
         queueService = mock()
-        queueInfoArgumentResolver = QueueInfoArgumentResolver(queueService)
+        queueArgumentResolver = QueueArgumentResolver(queueService)
     }
 
     @Test
@@ -36,7 +36,7 @@ class QueueInfoArgumentResolverTest {
 
         // when then
         assertThatThrownBy {
-            queueInfoArgumentResolver.resolveArgument(mock(), mock(), webRequest, mock())
+            queueArgumentResolver.resolveArgument(mock(), mock(), webRequest, mock())
         }
             .isInstanceOf(IllegalArgumentException::class.java)
             .hasMessage("접근이 거부되었습니다.")
@@ -53,7 +53,7 @@ class QueueInfoArgumentResolverTest {
 
         // when then
         assertThatThrownBy {
-            queueInfoArgumentResolver.resolveArgument(mock(), mock(), webRequest, mock())
+            queueArgumentResolver.resolveArgument(mock(), mock(), webRequest, mock())
         }
             .isInstanceOf(IllegalArgumentException::class.java)
             .hasMessage("접근이 거부되었습니다.")
@@ -67,19 +67,19 @@ class QueueInfoArgumentResolverTest {
         httpServletRequest.addHeader("token", token)
         given(webRequest.getNativeRequest(HttpServletRequest::class.java)).willReturn(httpServletRequest)
 
-        val queueInfo = QueueInfo(
+        val queue = Queue(
             id = 1L,
             userUuid = UUID.randomUUID(),
             status = QueueStatus.ACTIVE,
             token = "token:123",
             expiredAt = LocalDateTime.now().plusMinutes(10)
         )
-        given(queueService.getActiveQueue(token)).willReturn(queueInfo)
+        given(queueService.getActiveQueue(token)).willReturn(queue)
 
         // when
-        val result = queueInfoArgumentResolver.resolveArgument(mock(), mock(), webRequest, mock())
+        val result = queueArgumentResolver.resolveArgument(mock(), mock(), webRequest, mock())
 
         // then
-        assertThat(result).isEqualTo(queueInfo)
+        assertThat(result).isEqualTo(queue)
     }
 }

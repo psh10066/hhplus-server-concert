@@ -35,7 +35,7 @@ class UserServiceTest {
         given(userRepository.getUserById(1L)).willReturn(user)
 
         // when
-        val result = userService.getUserInfo(1L)
+        val result = userService.getUser(1L)
 
         // then
         assertThat(result.id).isEqualTo(user.id)

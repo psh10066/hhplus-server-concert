@@ -1,13 +1,9 @@
 package kr.hhplus.be.server.domain.service
 
-import kr.hhplus.be.server.domain.model.user.UserRepository
-import kr.hhplus.be.server.domain.model.user.UserWalletHistory
-import kr.hhplus.be.server.domain.model.user.UserWalletHistoryRepository
-import kr.hhplus.be.server.domain.model.user.UserWalletRepository
-import kr.hhplus.be.server.domain.model.user.dto.UserInfo
+import kr.hhplus.be.server.domain.model.user.*
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.UUID
+import java.util.*
 
 @Service
 class UserService(
@@ -16,14 +12,12 @@ class UserService(
     private val userWalletHistoryRepository: UserWalletHistoryRepository
 ) {
 
-    fun getUserInfo(id: Long): UserInfo {
-        val user = userRepository.getUserById(id)
-        return UserInfo.of(user)
+    fun getUser(id: Long): User {
+        return userRepository.getUserById(id)
     }
 
-    fun getUserInfo(uuid: UUID): UserInfo {
-        val user = userRepository.getUserByUuid(uuid)
-        return UserInfo.of(user)
+    fun getUser(uuid: UUID): User {
+        return userRepository.getUserByUuid(uuid)
     }
 
     fun getBalanceByUserId(userId: Long): Long {
