@@ -39,7 +39,7 @@ class UserServiceConcurrencyIT(
     }
 
     @Test
-    fun `동시에 5번 사용 요청 시 문제없이 충전되어야 한다`() {
+    fun `동시에 5번 사용 요청 시 문제없이 사용되어야 한다`() {
         // given
         userWalletJpaRepository.save(UserWalletEntity(userId = 1L, balance = 500L))
 
