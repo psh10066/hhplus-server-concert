@@ -35,3 +35,9 @@
 ```bash
 docker-compose up -d
 ```
+
+### DB 스키마 업데이트
+
+DB 구조가 변경된 이후 DB 스키마가 업데이트되지 않은 경우 아래 절차에 맞춰 진행해 주세요.
+1. 프로젝트 루트 디렉토리 내 data 폴더 삭제
+2. `docker-compose down` 후 `docker-compose up -d` 실행
