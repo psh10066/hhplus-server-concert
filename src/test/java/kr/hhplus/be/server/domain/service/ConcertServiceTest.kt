@@ -92,10 +92,10 @@ class ConcertServiceTest {
         // then
         assertThat(result).hasSize(2)
         assertThat(result[0].id).isEqualTo(concertSeats[0].id)
-        assertThat(result[0].concertId).isEqualTo(concertSeats[0].concertId)
+        assertThat(result[0].concertScheduleId).isEqualTo(concertSeats[0].concertScheduleId)
         assertThat(result[0].seatNumber).isEqualTo(concertSeats[0].seatNumber)
         assertThat(result[1].id).isEqualTo(concertSeats[1].id)
-        assertThat(result[1].concertId).isEqualTo(concertSeats[1].concertId)
+        assertThat(result[1].concertScheduleId).isEqualTo(concertSeats[1].concertScheduleId)
         assertThat(result[1].seatNumber).isEqualTo(concertSeats[1].seatNumber)
     }
 

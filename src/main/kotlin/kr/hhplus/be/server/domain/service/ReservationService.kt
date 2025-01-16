@@ -15,13 +15,13 @@ class ReservationService(
 ) {
 
     @Transactional
-    fun concertReservation(userId: Long, concertScheduleId: Long, concertSeatId: Long): Long {
-        val reservations = reservationRepository.findConcertReservation(concertScheduleId, concertSeatId)
+    fun concertReservation(userId: Long, concertSeatId: Long): Long {
+        val reservations = reservationRepository.findConcertReservation(concertSeatId)
         if (reservations.any { it.isBooked(clock) }) {
             throw CustomException(ErrorType.ALREADY_BOOKED_CONCERT_SEAT)
         }
 
-        val reservation = Reservation.book(clock, concertScheduleId, concertSeatId, userId)
+        val reservation = Reservation.book(clock, concertSeatId, userId)
         reservationRepository.save(reservation)
         return reservation.id
     }

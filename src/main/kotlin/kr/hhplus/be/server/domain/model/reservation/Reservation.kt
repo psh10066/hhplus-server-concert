@@ -7,7 +7,6 @@ import java.time.LocalDateTime
 
 class Reservation(
     val id: Long = 0,
-    val concertScheduleId: Long,
     val concertSeatId: Long,
     val userId: Long,
     var status: ReservationStatus,
@@ -15,9 +14,8 @@ class Reservation(
 ) {
 
     companion object {
-        fun book(clock: Clock, concertScheduleId: Long, concertSeatId: Long, userId: Long): Reservation {
+        fun book(clock: Clock, concertSeatId: Long, userId: Long): Reservation {
             return Reservation(
-                concertScheduleId = concertScheduleId,
                 concertSeatId = concertSeatId,
                 userId = userId,
                 status = ReservationStatus.BOOKED,

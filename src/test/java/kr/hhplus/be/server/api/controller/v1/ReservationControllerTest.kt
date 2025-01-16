@@ -37,10 +37,10 @@ class ReservationControllerTest(
         userWalletJpaRepository.save(UserWalletEntity(userId = 1L, balance = 1000000L))
         concertJpaRepository.save(ConcertEntity(name = "아이유 콘서트", price = 150000L))
         concertScheduleJpaRepository.save(ConcertScheduleEntity(concertId = 1L, startTime = LocalDateTime.of(2025, 1, 8, 11, 0)))
-        concertSeatJpaRepository.save(ConcertSeatEntity(concertId = 1L, seatNumber = 1))
-        concertSeatJpaRepository.save(ConcertSeatEntity(concertId = 1L, seatNumber = 2))
-        concertSeatJpaRepository.save(ConcertSeatEntity(concertId = 1L, seatNumber = 3))
-        reservationJpaRepository.save(ReservationEntity(concertScheduleId = 1L, concertSeatId = 3L, userId = 1L, status = ReservationStatus.BOOKED, expiredAt = LocalDateTime.now().plusMinutes(3)))
+        concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 1))
+        concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 2))
+        concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 3))
+        reservationJpaRepository.save(ReservationEntity(concertSeatId = 3L, userId = 1L, status = ReservationStatus.BOOKED, expiredAt = LocalDateTime.now().plusMinutes(3)))
     }
 
     @Test
@@ -49,7 +49,7 @@ class ReservationControllerTest(
             post("/api/v1/reservations/concert")
                 .header("token", "token:123")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(ConcertReservationRequest(concertScheduleId = 1L, concertSeatId = 2L)))
+                .content(objectMapper.writeValueAsString(ConcertReservationRequest(concertSeatId = 2L)))
         )
             .andExpect(status().isOk)
             .andDo(
@@ -65,7 +65,6 @@ class ReservationControllerTest(
                             )
                             .requestSchema(Schema("ConcertReservationRequest"))
                             .requestFields(
-                                fieldWithPath("concertScheduleId").type(JsonFieldType.NUMBER).description("콘서트 일정 ID"),
                                 fieldWithPath("concertSeatId").type(JsonFieldType.NUMBER).description("콘서트 좌석 ID"),
                             )
                             .responseSchema(Schema("ConcertReservationResponse"))

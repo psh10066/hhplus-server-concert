@@ -13,7 +13,7 @@ class ReservationTest {
     @Test
     fun `콘서트 예약 시 예약 상태로 생성된다`() {
         // when
-        val reservation = Reservation.book(Clock.systemDefaultZone(), 1L, 2L, 3L)
+        val reservation = Reservation.book(Clock.systemDefaultZone(), 2L, 3L)
 
         // then
         assertThat(reservation.status).isEqualTo(ReservationStatus.BOOKED)
@@ -24,7 +24,7 @@ class ReservationTest {
         // when
         val now = LocalDateTime.now()
         val clock = Clock.fixed(now.toInstant(ZoneOffset.UTC), ZoneOffset.UTC)
-        val reservation = Reservation.book(clock, 1L, 2L, 3L)
+        val reservation = Reservation.book(clock, 2L, 3L)
 
         // then
         assertThat(reservation.expiredAt).isEqualTo(now.plusMinutes(5L))
@@ -34,7 +34,6 @@ class ReservationTest {
     fun `결제 완료된 경우 예약된 상태로 취급된다`() {
         // given
         val reservation = Reservation(
-            concertScheduleId = 1L,
             concertSeatId = 2L,
             userId = 3L,
             status = ReservationStatus.PAYMENT_COMPLETED
@@ -51,7 +50,6 @@ class ReservationTest {
     fun `만료 시간이 지나지 않은 경우 예약된 상태로 취급된다`() {
         // given
         val reservation = Reservation(
-            concertScheduleId = 1L,
             concertSeatId = 2L,
             userId = 3L,
             status = ReservationStatus.BOOKED,
@@ -69,7 +67,6 @@ class ReservationTest {
     fun `만료 시간이 지난 경우 예약되지 않은 상태로 취급된다`() {
         // given
         val reservation = Reservation(
-            concertScheduleId = 1L,
             concertSeatId = 2L,
             userId = 3L,
             status = ReservationStatus.BOOKED,
@@ -87,7 +84,6 @@ class ReservationTest {
     fun `콘서트 결제 시 이미 결제 완료된 예약인 경우 CustomException이 발생한다`() {
         // given
         val reservation = Reservation(
-            concertScheduleId = 1L,
             concertSeatId = 2L,
             userId = 3L,
             status = ReservationStatus.PAYMENT_COMPLETED
@@ -105,7 +101,6 @@ class ReservationTest {
     fun `콘서트 결제 시 만료 시간이 지난 예약 상태의 경우 CustomException이 발생한다`() {
         // given
         val reservation = Reservation(
-            concertScheduleId = 1L,
             concertSeatId = 2L,
             userId = 3L,
             status = ReservationStatus.BOOKED,
@@ -124,7 +119,6 @@ class ReservationTest {
     fun `콘서트 결제 시 결제 상태로 변경된다`() {
         // given
         val reservation = Reservation(
-            concertScheduleId = 1L,
             concertSeatId = 2L,
             userId = 3L,
             status = ReservationStatus.BOOKED,
@@ -142,7 +136,6 @@ class ReservationTest {
     fun `콘서트 결제 시 만료 시간이 제거된다`() {
         // given
         val reservation = Reservation(
-            concertScheduleId = 1L,
             concertSeatId = 2L,
             userId = 3L,
             status = ReservationStatus.BOOKED,

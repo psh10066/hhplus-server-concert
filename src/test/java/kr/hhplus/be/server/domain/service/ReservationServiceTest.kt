@@ -32,11 +32,11 @@ class ReservationServiceTest {
         given(reservation1.isBooked(any())).willReturn(true)
 
 
-        given(reservationRepository.findConcertReservation(any(), any())).willReturn(listOf(reservation1, reservation2))
+        given(reservationRepository.findConcertReservation(any())).willReturn(listOf(reservation1, reservation2))
 
         // when then
         assertThatThrownBy {
-            reservationService.concertReservation(1L, 2L, 3L)
+            reservationService.concertReservation(1L, 3L)
         }
             .isInstanceOf(CustomException::class.java)
             .hasMessage("이미 예약된 좌석입니다.")
@@ -50,10 +50,10 @@ class ReservationServiceTest {
         given(reservation1.isBooked(any())).willReturn(false)
         given(reservation1.isBooked(any())).willReturn(false)
 
-        given(reservationRepository.findConcertReservation(any(), any())).willReturn(listOf(reservation1, reservation2))
+        given(reservationRepository.findConcertReservation(any())).willReturn(listOf(reservation1, reservation2))
 
         // when
-        reservationService.concertReservation(1L, 2L, 3L)
+        reservationService.concertReservation(1L, 3L)
 
         // then
         verify(reservationRepository).save(any())

@@ -4,8 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface ReservationJpaRepository : JpaRepository<ReservationEntity, Long> {
 
-    fun findByConcertScheduleIdAndConcertSeatId(
-        concertScheduleId: Long,
-        concertSeatId: Long
-    ): List<ReservationEntity>
+    fun findByConcertSeatId(concertSeatId: Long): List<ReservationEntity>
 }

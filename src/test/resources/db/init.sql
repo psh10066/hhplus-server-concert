@@ -50,7 +50,7 @@ CREATE TABLE concert_schedule (
 
 CREATE TABLE concert_seat (
     id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    concert_id BIGINT NOT NULL,
+    concert_schedule_id BIGINT NOT NULL,
     seat_number INT NOT NULL,
     created_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL
@@ -58,7 +58,6 @@ CREATE TABLE concert_seat (
 
 CREATE TABLE reservation (
     id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    concert_schedule_id BIGINT NOT NULL,
     concert_seat_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
     status VARCHAR(255) NOT NULL,

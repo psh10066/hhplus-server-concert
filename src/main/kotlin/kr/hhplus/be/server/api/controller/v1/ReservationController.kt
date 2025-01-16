@@ -25,7 +25,6 @@ class ReservationController(
     ): ApiResponse<ConcertReservationResponse> {
         val reservationId = reservationFacade.concertReservation(
             queue = queue,
-            concertScheduleId = request.concertScheduleId,
             concertSeatId = request.concertSeatId
         )
         return ApiResponse.success(ConcertReservationResponse(reservationId = reservationId))

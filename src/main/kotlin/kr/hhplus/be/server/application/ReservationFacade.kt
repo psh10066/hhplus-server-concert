@@ -15,13 +15,11 @@ class ReservationFacade(
 ) {
 
     @Transactional
-    fun concertReservation(queue: Queue, concertScheduleId: Long, concertSeatId: Long): Long {
+    fun concertReservation(queue: Queue, concertSeatId: Long): Long {
         val user = userService.getUser(queue.userUuid)
-        val concertSchedule = concertService.getConcertSchedule(concertScheduleId)
         val concertSeat = concertService.getConcertSeat(concertSeatId)
         val reservationId = reservationService.concertReservation(
             userId = user.id,
-            concertScheduleId = concertSchedule.id,
             concertSeatId = concertSeat.id
         )
         queueService.readyPayment(queue.token)
@@ -32,7 +30,7 @@ class ReservationFacade(
     fun concertPayment(queue: Queue, reservationId: Long): Long {
         val user = userService.getUser(queue.userUuid)
         val reservation = reservationService.payReservation(reservationId)
-        val concert = concertService.getConcertByScheduleId(reservation.concertScheduleId)
+        val concert = concertService.getConcertBySeatId(reservation.concertSeatId)
 
         userService.useBalance(userId = user.id, amount = concert.price)
         val paymentHistory = paymentService.pay(reservationId = reservation.id, userId = user.id, amount = concert.price)
