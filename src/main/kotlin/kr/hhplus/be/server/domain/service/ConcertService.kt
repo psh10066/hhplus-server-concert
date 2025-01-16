@@ -29,7 +29,7 @@ class ConcertService(
         return concertRepository.getById(concertSchedule.concertId)
     }
 
-    fun getConcertSeat(concertSeatId: Long): ConcertSeat {
-        return concertSeatRepository.getById(concertSeatId)
+    fun getConcertSeatWithLock(concertSeatId: Long): ConcertSeat {
+        return concertSeatRepository.getByIdWithLock(concertSeatId)
     }
 }
