@@ -1,10 +1,6 @@
 package kr.hhplus.be.server.api.controller.v1.resolver
 
-import jakarta.servlet.http.HttpServletRequest
 import kr.hhplus.be.server.domain.model.queue.Queue
-import kr.hhplus.be.server.domain.service.QueueService
-import kr.hhplus.be.server.support.error.CustomException
-import kr.hhplus.be.server.support.error.ErrorType
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.support.WebDataBinderFactory
@@ -13,9 +9,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 
 @Component
-class QueueArgumentResolver(
-    private val queueService: QueueService
-) : HandlerMethodArgumentResolver {
+class QueueArgumentResolver : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         return parameter.parameterType == Queue::class.java
     }
@@ -26,12 +20,6 @@ class QueueArgumentResolver(
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
     ): Any? {
-        val request = webRequest.getNativeRequest(HttpServletRequest::class.java)!!
-        try {
-            val token = request.getHeader("token") ?: throw IllegalArgumentException()
-            return queueService.getActiveQueue(token)
-        } catch (e: Exception) {
-            throw CustomException(ErrorType.UNAUTHORIZED)
-        }
+        return webRequest.getAttribute("queue", NativeWebRequest.SCOPE_REQUEST)
     }
 }
