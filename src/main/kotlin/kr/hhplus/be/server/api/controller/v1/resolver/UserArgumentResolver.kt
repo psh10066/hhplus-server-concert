@@ -1,8 +1,6 @@
 package kr.hhplus.be.server.api.controller.v1.resolver
 
-import jakarta.servlet.http.HttpServletRequest
-import kr.hhplus.be.server.domain.model.queue.dto.QueueInfo
-import kr.hhplus.be.server.domain.service.QueueService
+import kr.hhplus.be.server.domain.model.user.User
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.support.WebDataBinderFactory
@@ -11,11 +9,9 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 
 @Component
-class QueueInfoArgumentResolver(
-    private val queueService: QueueService
-) : HandlerMethodArgumentResolver {
+class UserArgumentResolver : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
-        return parameter.parameterType == QueueInfo::class.java
+        return parameter.parameterType == User::class.java
     }
 
     override fun resolveArgument(
@@ -24,12 +20,6 @@ class QueueInfoArgumentResolver(
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
     ): Any? {
-        val request = webRequest.getNativeRequest(HttpServletRequest::class.java)!!
-        try {
-            val token = request.getHeader("token") ?: throw IllegalArgumentException()
-            return queueService.getActiveQueue(token)
-        } catch (e: Exception) {
-            throw IllegalArgumentException("접근이 거부되었습니다.")
-        }
+        return webRequest.getAttribute("user", NativeWebRequest.SCOPE_REQUEST)
     }
 }

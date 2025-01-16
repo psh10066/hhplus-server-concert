@@ -2,6 +2,8 @@ package kr.hhplus.be.server.domain.service
 
 import kr.hhplus.be.server.domain.model.reservation.Reservation
 import kr.hhplus.be.server.domain.model.reservation.ReservationRepository
+import kr.hhplus.be.server.support.error.CustomException
+import kr.hhplus.be.server.support.error.ErrorType
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Clock
@@ -16,7 +18,7 @@ class ReservationService(
     fun concertReservation(userId: Long, concertScheduleId: Long, concertSeatId: Long): Long {
         val reservations = reservationRepository.findConcertReservation(concertScheduleId, concertSeatId)
         if (reservations.any { it.isBooked(clock) }) {
-            throw IllegalStateException("이미 예약된 좌석입니다.")
+            throw CustomException(ErrorType.ALREADY_BOOKED_CONCERT_SEAT)
         }
 
         val reservation = Reservation.book(clock, concertScheduleId, concertSeatId, userId)
@@ -26,10 +28,7 @@ class ReservationService(
 
     fun payReservation(id: Long): Reservation {
         val reservation = reservationRepository.getById(id)
-        if (!reservation.isPayable(clock)) {
-            throw IllegalStateException("결제 가능한 예약이 아닙니다.")
-        }
-        reservation.pay()
+        reservation.pay(clock)
         reservationRepository.save(reservation)
         return reservation
     }

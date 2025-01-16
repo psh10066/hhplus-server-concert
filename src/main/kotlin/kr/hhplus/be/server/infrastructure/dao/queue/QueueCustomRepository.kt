@@ -1,10 +1,12 @@
 package kr.hhplus.be.server.infrastructure.dao.queue
 
-import kr.hhplus.be.server.domain.model.queue.Queue
+import java.util.*
 
 interface QueueCustomRepository {
 
-    fun getNotExpiredWithOrder(count: Int): List<Queue>
+    fun findNotExpiredByUserUuid(userUuid: UUID): QueueEntity?
 
-    fun findNotExpiredByToken(token: String): Queue?
+    fun getNotExpiredWithOrder(count: Int): List<QueueEntity>
+
+    fun findNotExpiredByToken(token: String): QueueEntity?
 }

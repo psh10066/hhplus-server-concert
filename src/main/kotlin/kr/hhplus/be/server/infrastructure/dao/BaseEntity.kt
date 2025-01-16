@@ -7,10 +7,11 @@ import org.hibernate.proxy.HibernateProxy
 import java.time.LocalDateTime
 
 @MappedSuperclass
-abstract class BaseEntity {
+abstract class BaseEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0
+    val id: Long,
+) {
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

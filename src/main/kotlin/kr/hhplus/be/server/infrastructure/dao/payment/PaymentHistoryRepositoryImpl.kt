@@ -10,6 +10,6 @@ class PaymentHistoryRepositoryImpl(
 ) : PaymentHistoryRepository {
 
     override fun save(paymentHistory: PaymentHistory): PaymentHistory {
-        return paymentHistoryJpaRepository.save(paymentHistory)
+        return paymentHistoryJpaRepository.save(PaymentHistoryEntity.from(paymentHistory)).toModel()
     }
 }

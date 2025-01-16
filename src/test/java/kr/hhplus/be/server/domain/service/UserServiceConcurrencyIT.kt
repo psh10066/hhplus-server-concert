@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.domain.service
 
-import kr.hhplus.be.server.domain.model.user.*
 import kr.hhplus.be.server.helper.CleanUp
+import kr.hhplus.be.server.infrastructure.dao.user.UserWalletEntity
 import kr.hhplus.be.server.infrastructure.dao.user.UserWalletJpaRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -26,7 +26,7 @@ class UserServiceConcurrencyIT(
     @Test
     fun `동시에 5번 충전 요청 시 문제없이 충전되어야 한다`() {
         // given
-        userWalletJpaRepository.save(UserWallet(userId = 1L, balance = 0L))
+        userWalletJpaRepository.save(UserWalletEntity(userId = 1L, balance = 0L))
 
         // when
         concurrencyTestHelper(5, Runnable {

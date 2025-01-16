@@ -10,20 +10,22 @@ class QueueRepositoryImpl(
     private val queueJpaRepository: QueueJpaRepository
 ) : QueueRepository {
 
-    override fun findByUserUuid(userUuid: UUID): Queue? {
-        return queueJpaRepository.findByUserUuid(userUuid)
+    override fun findNotExpiredByUserUuid(userUuid: UUID): Queue? {
+        return queueJpaRepository.findNotExpiredByUserUuid(userUuid)?.toModel()
     }
 
     override fun save(queue: Queue): Queue {
-        return queueJpaRepository.save(queue)
+        return queueJpaRepository.save(QueueEntity.from(queue)).toModel()
     }
 
     override fun getNotExpiredWithOrder(count: Int): List<Queue> {
-        return queueJpaRepository.getNotExpiredWithOrder(count)
+        return queueJpaRepository.getNotExpiredWithOrder(count).map {
+            it.toModel()
+        }
     }
 
     override fun findNotExpiredByToken(token: String): Queue? {
-        return queueJpaRepository.findNotExpiredByToken(token)
+        return queueJpaRepository.findNotExpiredByToken(token)?.toModel()
     }
 
     override fun deleteById(id: Long) {

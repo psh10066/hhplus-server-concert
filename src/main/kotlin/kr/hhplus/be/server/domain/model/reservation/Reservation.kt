@@ -1,28 +1,18 @@
 package kr.hhplus.be.server.domain.model.reservation
 
-import jakarta.persistence.*
-import kr.hhplus.be.server.infrastructure.dao.BaseEntity
+import kr.hhplus.be.server.support.error.CustomException
+import kr.hhplus.be.server.support.error.ErrorType
 import java.time.Clock
 import java.time.LocalDateTime
 
-@Entity
-@Table(name = "reservation")
 class Reservation(
-    @Column(nullable = false)
+    val id: Long = 0,
     val concertScheduleId: Long,
-
-    @Column(nullable = false)
     val concertSeatId: Long,
-
-    @Column(nullable = false)
     val userId: Long,
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     var status: ReservationStatus,
-
     var expiredAt: LocalDateTime? = null,
-) : BaseEntity() {
+) {
 
     companion object {
         fun book(clock: Clock, concertScheduleId: Long, concertSeatId: Long, userId: Long): Reservation {
@@ -46,11 +36,10 @@ class Reservation(
         return false
     }
 
-    fun isPayable(clock: Clock): Boolean {
-        return status == ReservationStatus.BOOKED && expiredAt?.isAfter(LocalDateTime.now(clock)) == true
-    }
-
-    fun pay() {
+    fun pay(clock: Clock) {
+        if (status != ReservationStatus.BOOKED || expiredAt?.isAfter(LocalDateTime.now(clock)) != true) {
+            throw CustomException(ErrorType.NOT_PAYABLE_RESERVATION)
+        }
         status = ReservationStatus.PAYMENT_COMPLETED
         expiredAt = null
     }

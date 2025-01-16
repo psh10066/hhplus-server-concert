@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.api.controller.v1.response
 
-import kr.hhplus.be.server.domain.model.concert.dto.ConcertSeatInfo
+import kr.hhplus.be.server.domain.model.concert.ConcertSeat
 
 data class GetConcertSeatResponse(
     val seats: List<SeatDto>
@@ -10,7 +10,7 @@ data class GetConcertSeatResponse(
         val seatNumber: Int
     ) {
         companion object {
-            fun of(seat: ConcertSeatInfo): SeatDto {
+            fun of(seat: ConcertSeat): SeatDto {
                 return SeatDto(
                     concertSeatId = seat.id,
                     seatNumber = seat.seatNumber

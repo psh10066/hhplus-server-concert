@@ -5,7 +5,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters
 import com.epages.restdocs.apispec.Schema
 import kr.hhplus.be.server.api.ControllerIntegrationTest
 import kr.hhplus.be.server.api.controller.v1.request.ChargeBalanceRequest
-import kr.hhplus.be.server.domain.model.user.UserWallet
+import kr.hhplus.be.server.infrastructure.dao.user.UserWalletEntity
 import kr.hhplus.be.server.infrastructure.dao.user.UserWalletJpaRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -25,7 +25,7 @@ class UserWalletControllerTest(
 
     @BeforeEach
     fun setUp() {
-        userWalletJpaRepository.save(UserWallet(userId = 1L, balance = 10000L))
+        userWalletJpaRepository.save(UserWalletEntity(userId = 1L, balance = 10000L))
     }
 
     @Test

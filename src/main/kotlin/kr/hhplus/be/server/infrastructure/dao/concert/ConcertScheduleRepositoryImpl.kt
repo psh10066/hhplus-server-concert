@@ -2,6 +2,8 @@ package kr.hhplus.be.server.infrastructure.dao.concert
 
 import kr.hhplus.be.server.domain.model.concert.ConcertSchedule
 import kr.hhplus.be.server.domain.model.concert.ConcertScheduleRepository
+import kr.hhplus.be.server.support.error.CustomException
+import kr.hhplus.be.server.support.error.ErrorType
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 import java.time.Clock
@@ -14,11 +16,13 @@ class ConcertScheduleRepositoryImpl(
 ) : ConcertScheduleRepository {
 
     override fun findAvailablesByConcertId(concertId: Long): List<ConcertSchedule> {
-        return concertScheduleJpaRepository.findByConcertIdAndStartTimeAfter(concertId, LocalDateTime.now(clock))
+        return concertScheduleJpaRepository.findByConcertIdAndStartTimeAfter(concertId, LocalDateTime.now(clock)).map {
+            it.toModel()
+        }
     }
 
     override fun getById(id: Long): ConcertSchedule {
-        return concertScheduleJpaRepository.findByIdOrNull(id)
-            ?: throw IllegalStateException("존재하지 않는 콘서트 날짜입니다.")
+        return concertScheduleJpaRepository.findByIdOrNull(id)?.toModel()
+            ?: throw CustomException(ErrorType.CONCERT_SCHEDULE_NOT_FOUND)
     }
 }

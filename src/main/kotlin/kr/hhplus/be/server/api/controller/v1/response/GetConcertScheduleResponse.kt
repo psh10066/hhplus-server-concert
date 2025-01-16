@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.api.controller.v1.response
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import kr.hhplus.be.server.domain.model.concert.dto.ConcertScheduleInfo
+import kr.hhplus.be.server.domain.model.concert.ConcertSchedule
 import java.time.LocalDateTime
 
 data class GetConcertScheduleResponse(
@@ -13,7 +13,7 @@ data class GetConcertScheduleResponse(
         val startTime: LocalDateTime
     ) {
         companion object {
-            fun of(concertSchedule: ConcertScheduleInfo): ScheduleDto {
+            fun of(concertSchedule: ConcertSchedule): ScheduleDto {
                 return ScheduleDto(
                     concertScheduleId = concertSchedule.id,
                     startTime = concertSchedule.startTime

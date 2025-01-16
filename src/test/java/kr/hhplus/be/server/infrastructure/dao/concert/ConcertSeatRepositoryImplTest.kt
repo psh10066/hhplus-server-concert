@@ -1,12 +1,9 @@
 package kr.hhplus.be.server.infrastructure.dao.concert
 
-import kr.hhplus.be.server.domain.model.concert.Concert
-import kr.hhplus.be.server.domain.model.concert.ConcertSchedule
-import kr.hhplus.be.server.domain.model.concert.ConcertSeat
-import kr.hhplus.be.server.domain.model.reservation.Reservation
 import kr.hhplus.be.server.domain.model.reservation.ReservationStatus
 import kr.hhplus.be.server.helper.CleanUp
 import kr.hhplus.be.server.helper.KSelect.Companion.field
+import kr.hhplus.be.server.infrastructure.dao.reservation.ReservationEntity
 import kr.hhplus.be.server.infrastructure.dao.reservation.ReservationJpaRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.instancio.Instancio
@@ -34,14 +31,14 @@ class ConcertSeatRepositoryImplTest(
     @Test
     fun `예약되지 않은 좌석만 조회할 수 있다`() {
         // given
-        val concert = concertJpaRepository.save(createConcert())
-        val concertSchedule = concertScheduleJpaRepository.save(createConcertSchedule(concert.id))
-        val seat1 = concertSeatJpaRepository.save(ConcertSeat(concertId = concert.id, seatNumber = 1))
-        val seat2 = concertSeatJpaRepository.save(ConcertSeat(concertId = concert.id, seatNumber = 2))
-        val seat3 = concertSeatJpaRepository.save(ConcertSeat(concertId = concert.id, seatNumber = 3))
-        val seat4 = concertSeatJpaRepository.save(ConcertSeat(concertId = concert.id, seatNumber = 3))
+        val concert = concertJpaRepository.save(createConcertEntity())
+        val concertSchedule = concertScheduleJpaRepository.save(createConcertScheduleEntity(concert.id))
+        val seat1 = concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id, seatNumber = 1))
+        val seat2 = concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id, seatNumber = 2))
+        val seat3 = concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id, seatNumber = 3))
+        val seat4 = concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id, seatNumber = 3))
         reservationJpaRepository.save(
-            Reservation(
+            ReservationEntity(
                 concertScheduleId = concertSchedule.id,
                 concertSeatId = seat1.id,
                 userId = 1L,
@@ -49,7 +46,7 @@ class ConcertSeatRepositoryImplTest(
             )
         )
         reservationJpaRepository.save(
-            Reservation(
+            ReservationEntity(
                 concertScheduleId = concertSchedule.id,
                 concertSeatId = seat2.id,
                 userId = 1L,
@@ -63,20 +60,20 @@ class ConcertSeatRepositoryImplTest(
 
         // then
         assertThat(result).hasSize(2)
-        assertThat(result[0]).isEqualTo(seat3)
-        assertThat(result[1]).isEqualTo(seat4)
+        assertThat(result[0].id).isEqualTo(seat3.id)
+        assertThat(result[1].id).isEqualTo(seat4.id)
     }
 
     @Test
     fun `동일한 자리에 만료된 예약이 여러 개 존재해도 예약 가능 좌석으로 조회할 수 있다`() {
         // given
-        val concert = concertJpaRepository.save(createConcert())
-        val concertSchedule = concertScheduleJpaRepository.save(createConcertSchedule(concert.id))
-        val seat1 = concertSeatJpaRepository.save(ConcertSeat(concertId = concert.id, seatNumber = 1))
-        val seat2 = concertSeatJpaRepository.save(ConcertSeat(concertId = concert.id, seatNumber = 2))
-        val seat3 = concertSeatJpaRepository.save(ConcertSeat(concertId = concert.id, seatNumber = 3))
+        val concert = concertJpaRepository.save(createConcertEntity())
+        val concertSchedule = concertScheduleJpaRepository.save(createConcertScheduleEntity(concert.id))
+        val seat1 = concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id, seatNumber = 1))
+        val seat2 = concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id, seatNumber = 2))
+        val seat3 = concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id, seatNumber = 3))
         reservationJpaRepository.save(
-            Reservation(
+            ReservationEntity(
                 concertScheduleId = concertSchedule.id,
                 concertSeatId = seat1.id,
                 userId = 1L,
@@ -85,7 +82,7 @@ class ConcertSeatRepositoryImplTest(
             )
         )
         reservationJpaRepository.save(
-            Reservation(
+            ReservationEntity(
                 concertScheduleId = concertSchedule.id,
                 concertSeatId = seat1.id,
                 userId = 2L,
@@ -99,40 +96,40 @@ class ConcertSeatRepositoryImplTest(
 
         // then
         assertThat(result).hasSize(3)
-        assertThat(result[0]).isEqualTo(seat1)
-        assertThat(result[1]).isEqualTo(seat2)
-        assertThat(result[2]).isEqualTo(seat3)
+        assertThat(result[0].id).isEqualTo(seat1.id)
+        assertThat(result[1].id).isEqualTo(seat2.id)
+        assertThat(result[2].id).isEqualTo(seat3.id)
     }
 
     @Test
     fun `해당 콘서트의 좌석만 조회할 수 있다`() {
         // given
-        val concert = concertJpaRepository.save(createConcert())
-        val concertSchedule = concertScheduleJpaRepository.save(createConcertSchedule(concert.id))
-        val seat1 = concertSeatJpaRepository.save(ConcertSeat(concertId = concert.id, seatNumber = 1))
-        val seat2 = concertSeatJpaRepository.save(ConcertSeat(concertId = concert.id, seatNumber = 2))
-        concertSeatJpaRepository.save(ConcertSeat(concertId = concert.id + 1, seatNumber = 1))
-        concertSeatJpaRepository.save(ConcertSeat(concertId = concert.id + 1, seatNumber = 2))
+        val concert = concertJpaRepository.save(createConcertEntity())
+        val concertSchedule = concertScheduleJpaRepository.save(createConcertScheduleEntity(concert.id))
+        val seat1 = concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id, seatNumber = 1))
+        val seat2 = concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id, seatNumber = 2))
+        concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id + 1, seatNumber = 1))
+        concertSeatJpaRepository.save(ConcertSeatEntity(concertId = concert.id + 1, seatNumber = 2))
 
         // when
         val result = concertSeatRepositoryImpl.findAvailableSeats(concertSchedule.id)
 
         // then
         assertThat(result).hasSize(2)
-        assertThat(result[0]).isEqualTo(seat1)
-        assertThat(result[1]).isEqualTo(seat2)
+        assertThat(result[0].id).isEqualTo(seat1.id)
+        assertThat(result[1].id).isEqualTo(seat2.id)
     }
 
-    private fun createConcert(): Concert {
-        return Instancio.of(Concert::class.java)
-            .set(field(Concert::id), 0)
+    private fun createConcertEntity(): ConcertEntity {
+        return Instancio.of(ConcertEntity::class.java)
+            .set(field(ConcertEntity::id), 0)
             .create()
     }
 
-    private fun createConcertSchedule(concertId: Long): ConcertSchedule {
-        return Instancio.of(ConcertSchedule::class.java)
-            .set(field(ConcertSchedule::id), 0)
-            .set(field(ConcertSchedule::concertId), concertId)
+    private fun createConcertScheduleEntity(concertId: Long): ConcertScheduleEntity {
+        return Instancio.of(ConcertScheduleEntity::class.java)
+            .set(field(ConcertScheduleEntity::id), 0)
+            .set(field(ConcertScheduleEntity::concertId), concertId)
             .create()
     }
 }
