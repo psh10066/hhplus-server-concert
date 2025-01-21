@@ -22,14 +22,12 @@ class ReservationService(
         }
 
         val reservation = Reservation.book(clock, concertSeatId, userId)
-        reservationRepository.save(reservation)
-        return reservation.id
+        return reservationRepository.save(reservation).id
     }
 
     fun payReservation(id: Long): Reservation {
         val reservation = reservationRepository.getById(id)
         reservation.pay(clock)
-        reservationRepository.save(reservation)
-        return reservation
+        return reservationRepository.save(reservation)
     }
 }

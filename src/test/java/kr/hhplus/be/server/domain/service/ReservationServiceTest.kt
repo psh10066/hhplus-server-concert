@@ -2,12 +2,13 @@ package kr.hhplus.be.server.domain.service
 
 import kr.hhplus.be.server.domain.model.reservation.Reservation
 import kr.hhplus.be.server.domain.model.reservation.ReservationRepository
+import kr.hhplus.be.server.domain.model.reservation.ReservationStatus
 import kr.hhplus.be.server.support.error.CustomException
+import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.mockito.kotlin.given
 import java.time.Clock
@@ -51,11 +52,12 @@ class ReservationServiceTest {
         given(reservation1.isBooked(any())).willReturn(false)
 
         given(reservationRepository.findConcertReservation(any())).willReturn(listOf(reservation1, reservation2))
+        given(reservationRepository.save(any())).willReturn(Reservation(id = 2L, concertSeatId = 3L, userId = 1L, status = ReservationStatus.BOOKED))
 
         // when
-        reservationService.concertReservation(1L, 3L)
+        val result = reservationService.concertReservation(1L, 3L)
 
         // then
-        verify(reservationRepository).save(any())
+        assertThat(result).isEqualTo(2L)
     }
 }
