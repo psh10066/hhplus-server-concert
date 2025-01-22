@@ -29,8 +29,8 @@ class ReservationServiceTest {
         // given
         val reservation1: Reservation = mock()
         val reservation2: Reservation = mock()
-        given(reservation1.isBooked(any())).willReturn(false)
-        given(reservation1.isBooked(any())).willReturn(true)
+        given(reservation1.isReserved(any())).willReturn(false)
+        given(reservation1.isReserved(any())).willReturn(true)
 
 
         given(reservationRepository.findConcertReservation(any())).willReturn(listOf(reservation1, reservation2))
@@ -48,11 +48,11 @@ class ReservationServiceTest {
         // given
         val reservation1: Reservation = mock()
         val reservation2: Reservation = mock()
-        given(reservation1.isBooked(any())).willReturn(false)
-        given(reservation1.isBooked(any())).willReturn(false)
+        given(reservation1.isReserved(any())).willReturn(false)
+        given(reservation1.isReserved(any())).willReturn(false)
 
         given(reservationRepository.findConcertReservation(any())).willReturn(listOf(reservation1, reservation2))
-        given(reservationRepository.save(any())).willReturn(Reservation(id = 2L, concertSeatId = 3L, userId = 1L, status = ReservationStatus.BOOKED))
+        given(reservationRepository.save(any())).willReturn(Reservation(id = 2L, concertSeatId = 3L, userId = 1L, status = ReservationStatus.RESERVED))
 
         // when
         val result = reservationService.concertReservation(1L, 3L)

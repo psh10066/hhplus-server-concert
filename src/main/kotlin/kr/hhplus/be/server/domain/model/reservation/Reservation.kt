@@ -14,17 +14,17 @@ class Reservation(
 ) {
 
     companion object {
-        fun book(clock: Clock, concertSeatId: Long, userId: Long): Reservation {
+        fun reserve(clock: Clock, concertSeatId: Long, userId: Long): Reservation {
             return Reservation(
                 concertSeatId = concertSeatId,
                 userId = userId,
-                status = ReservationStatus.BOOKED,
+                status = ReservationStatus.RESERVED,
                 expiredAt = LocalDateTime.now(clock).plusMinutes(5)
             )
         }
     }
 
-    fun isBooked(clock: Clock): Boolean {
+    fun isReserved(clock: Clock): Boolean {
         if (status == ReservationStatus.PAYMENT_COMPLETED) {
             return true
         }
@@ -35,7 +35,7 @@ class Reservation(
     }
 
     fun pay(clock: Clock) {
-        if (status != ReservationStatus.BOOKED || expiredAt?.isAfter(LocalDateTime.now(clock)) != true) {
+        if (status != ReservationStatus.RESERVED || expiredAt?.isAfter(LocalDateTime.now(clock)) != true) {
             throw CustomException(ErrorType.NOT_PAYABLE_RESERVATION)
         }
         status = ReservationStatus.PAYMENT_COMPLETED

@@ -40,7 +40,7 @@ class ReservationControllerTest(
         concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 1))
         concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 2))
         concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 3))
-        reservationJpaRepository.save(ReservationEntity(concertSeatId = 3L, userId = 1L, status = ReservationStatus.BOOKED, expiredAt = LocalDateTime.now().plusMinutes(3)))
+        reservationJpaRepository.save(ReservationEntity(concertSeatId = 3L, userId = 1L, status = ReservationStatus.RESERVED, expiredAt = LocalDateTime.now().plusMinutes(3)))
     }
 
     @Test

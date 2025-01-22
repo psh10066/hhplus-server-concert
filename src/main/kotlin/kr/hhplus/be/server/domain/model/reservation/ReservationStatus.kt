@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.domain.model.reservation
 
 enum class ReservationStatus {
-    BOOKED,
+    RESERVED,
     PAYMENT_COMPLETED,
 }

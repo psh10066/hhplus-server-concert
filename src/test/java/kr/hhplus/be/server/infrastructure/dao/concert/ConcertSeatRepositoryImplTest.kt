@@ -48,7 +48,7 @@ class ConcertSeatRepositoryImplTest(
             ReservationEntity(
                 concertSeatId = seat2.id,
                 userId = 1L,
-                status = ReservationStatus.BOOKED,
+                status = ReservationStatus.RESERVED,
                 expiredAt = LocalDateTime.now().plusMinutes(3)
             )
         )
@@ -74,7 +74,7 @@ class ConcertSeatRepositoryImplTest(
             ReservationEntity(
                 concertSeatId = seat1.id,
                 userId = 1L,
-                status = ReservationStatus.BOOKED,
+                status = ReservationStatus.RESERVED,
                 expiredAt = LocalDateTime.now().minusMinutes(3)
             )
         )
@@ -82,7 +82,7 @@ class ConcertSeatRepositoryImplTest(
             ReservationEntity(
                 concertSeatId = seat1.id,
                 userId = 2L,
-                status = ReservationStatus.BOOKED,
+                status = ReservationStatus.RESERVED,
                 expiredAt = LocalDateTime.now().minusMinutes(10)
             )
         )

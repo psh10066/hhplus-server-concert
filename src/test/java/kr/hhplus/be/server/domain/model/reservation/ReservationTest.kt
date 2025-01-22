@@ -13,10 +13,10 @@ class ReservationTest {
     @Test
     fun `콘서트 예약 시 예약 상태로 생성된다`() {
         // when
-        val reservation = Reservation.book(Clock.systemDefaultZone(), 2L, 3L)
+        val reservation = Reservation.reserve(Clock.systemDefaultZone(), 2L, 3L)
 
         // then
-        assertThat(reservation.status).isEqualTo(ReservationStatus.BOOKED)
+        assertThat(reservation.status).isEqualTo(ReservationStatus.RESERVED)
     }
 
     @Test
@@ -24,7 +24,7 @@ class ReservationTest {
         // when
         val now = LocalDateTime.now()
         val clock = Clock.fixed(now.toInstant(ZoneOffset.UTC), ZoneOffset.UTC)
-        val reservation = Reservation.book(clock, 2L, 3L)
+        val reservation = Reservation.reserve(clock, 2L, 3L)
 
         // then
         assertThat(reservation.expiredAt).isEqualTo(now.plusMinutes(5L))
@@ -40,10 +40,10 @@ class ReservationTest {
         )
 
         // when
-        val isBooked = reservation.isBooked(Clock.systemDefaultZone())
+        val isReserved = reservation.isReserved(Clock.systemDefaultZone())
 
         // then
-        assertThat(isBooked).isTrue()
+        assertThat(isReserved).isTrue()
     }
 
     @Test
@@ -52,15 +52,15 @@ class ReservationTest {
         val reservation = Reservation(
             concertSeatId = 2L,
             userId = 3L,
-            status = ReservationStatus.BOOKED,
+            status = ReservationStatus.RESERVED,
             expiredAt = LocalDateTime.now().plusMinutes(1)
         )
 
         // when
-        val isBooked = reservation.isBooked(Clock.systemDefaultZone())
+        val isReserved = reservation.isReserved(Clock.systemDefaultZone())
 
         // then
-        assertThat(isBooked).isTrue()
+        assertThat(isReserved).isTrue()
     }
 
     @Test
@@ -69,15 +69,15 @@ class ReservationTest {
         val reservation = Reservation(
             concertSeatId = 2L,
             userId = 3L,
-            status = ReservationStatus.BOOKED,
+            status = ReservationStatus.RESERVED,
             expiredAt = LocalDateTime.now().minusMinutes(1)
         )
 
         // when
-        val isBooked = reservation.isBooked(Clock.systemDefaultZone())
+        val isReserved = reservation.isReserved(Clock.systemDefaultZone())
 
         // then
-        assertThat(isBooked).isFalse()
+        assertThat(isReserved).isFalse()
     }
 
     @Test
@@ -103,7 +103,7 @@ class ReservationTest {
         val reservation = Reservation(
             concertSeatId = 2L,
             userId = 3L,
-            status = ReservationStatus.BOOKED,
+            status = ReservationStatus.RESERVED,
             expiredAt = LocalDateTime.now().minusMinutes(1)
         )
 
@@ -121,7 +121,7 @@ class ReservationTest {
         val reservation = Reservation(
             concertSeatId = 2L,
             userId = 3L,
-            status = ReservationStatus.BOOKED,
+            status = ReservationStatus.RESERVED,
             expiredAt = LocalDateTime.now().plusMinutes(1)
         )
 
@@ -138,7 +138,7 @@ class ReservationTest {
         val reservation = Reservation(
             concertSeatId = 2L,
             userId = 3L,
-            status = ReservationStatus.BOOKED,
+            status = ReservationStatus.RESERVED,
             expiredAt = LocalDateTime.now().plusMinutes(1)
         )
 
