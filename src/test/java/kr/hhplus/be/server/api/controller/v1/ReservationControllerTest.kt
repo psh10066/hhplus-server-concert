@@ -6,6 +6,7 @@ import com.epages.restdocs.apispec.Schema
 import kr.hhplus.be.server.api.ControllerIntegrationTest
 import kr.hhplus.be.server.api.controller.v1.request.ConcertPaymentRequest
 import kr.hhplus.be.server.api.controller.v1.request.ConcertReservationRequest
+import kr.hhplus.be.server.domain.model.concert.ConcertSeatStatus
 import kr.hhplus.be.server.domain.model.reservation.ReservationStatus
 import kr.hhplus.be.server.infrastructure.dao.concert.*
 import kr.hhplus.be.server.infrastructure.dao.reservation.ReservationEntity
@@ -37,14 +38,15 @@ class ReservationControllerTest(
         userWalletJpaRepository.save(UserWalletEntity(userId = 1L, balance = 1000000L))
         concertJpaRepository.save(ConcertEntity(name = "아이유 콘서트", price = 150000L))
         concertScheduleJpaRepository.save(ConcertScheduleEntity(concertId = 1L, startTime = LocalDateTime.of(2025, 1, 8, 11, 0)))
-        concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 1))
-        concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 2))
-        concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 3))
-        reservationJpaRepository.save(ReservationEntity(concertSeatId = 3L, userId = 1L, status = ReservationStatus.RESERVED, expiredAt = LocalDateTime.now().plusMinutes(3)))
     }
 
     @Test
     fun concertReservation() {
+        // given
+        concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 1, status = ConcertSeatStatus.RESERVED))
+        concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 2, status = ConcertSeatStatus.AVAILABLE))
+
+        // when then
         mockMvc.perform(
             post("/api/v1/reservations/concert")
                 .header("token", "token:123")
@@ -81,6 +83,13 @@ class ReservationControllerTest(
 
     @Test
     fun concertPayment() {
+        // given
+        concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 1, status = ConcertSeatStatus.AVAILABLE))
+        concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 2, status = ConcertSeatStatus.AVAILABLE))
+        concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 3, status = ConcertSeatStatus.RESERVED))
+        reservationJpaRepository.save(ReservationEntity(concertSeatId = 3L, userId = 1L, status = ReservationStatus.RESERVED, expiredAt = LocalDateTime.now().plusMinutes(3)))
+
+        // when then
         mockMvc.perform(
             post("/api/v1/reservations/concert/payment")
                 .header("token", "token:123")

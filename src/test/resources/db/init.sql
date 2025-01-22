@@ -52,6 +52,8 @@ CREATE TABLE concert_seat (
     id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     concert_schedule_id BIGINT NOT NULL,
     seat_number INT NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    version BIGINT NOT NULL,
     created_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL
 );

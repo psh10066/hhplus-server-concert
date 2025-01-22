@@ -6,5 +6,5 @@ interface ConcertSeatRepository {
 
     fun getById(id: Long): ConcertSeat
 
-    fun getByIdWithLock(id: Long): ConcertSeat
+    fun saveAndFlush(concertSeat: ConcertSeat): ConcertSeat
 }
