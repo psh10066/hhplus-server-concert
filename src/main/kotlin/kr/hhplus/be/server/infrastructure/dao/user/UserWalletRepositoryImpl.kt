@@ -16,11 +16,6 @@ class UserWalletRepositoryImpl(
             ?: throw CustomException(ErrorType.USER_WALLET_NOT_FOUND)
     }
 
-    override fun getByUserIdWithLock(userId: Long): UserWallet {
-        return userWalletJpaRepository.findForUpdateByUserId(userId)?.toModel()
-            ?: throw CustomException(ErrorType.USER_WALLET_NOT_FOUND)
-    }
-
     override fun save(userWallet: UserWallet): UserWallet {
         return userWalletJpaRepository.save(UserWalletEntity.from(userWallet)).toModel()
     }

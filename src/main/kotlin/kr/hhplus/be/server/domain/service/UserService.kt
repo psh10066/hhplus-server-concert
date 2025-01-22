@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.domain.service
 
 import kr.hhplus.be.server.domain.model.user.*
+import kr.hhplus.be.server.support.aop.lock.DistributedLock
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -25,17 +26,19 @@ class UserService(
         return userWallet.balance
     }
 
+    @DistributedLock("'user_wallet:' + #userId")
     @Transactional
     fun chargeBalance(userId: Long, amount: Long) {
-        val userWallet = userWalletRepository.getByUserIdWithLock(userId)
+        val userWallet = userWalletRepository.getByUserId(userId)
         userWallet.charge(amount)
         userWalletRepository.save(userWallet)
         userWalletHistoryRepository.save(UserWalletHistory(userWalletId = userWallet.id, amount = amount))
     }
 
+    @DistributedLock("'user_wallet:' + #userId")
     @Transactional
     fun useBalance(userId: Long, amount: Long) {
-        val userWallet = userWalletRepository.getByUserIdWithLock(userId)
+        val userWallet = userWalletRepository.getByUserId(userId)
         userWallet.use(amount)
         userWalletRepository.save(userWallet)
         userWalletHistoryRepository.save(UserWalletHistory(userWalletId = userWallet.id, amount = -amount))

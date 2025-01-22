@@ -60,7 +60,7 @@ class UserServiceTest {
     fun `사용자 잔고를 충전할 수 있다`() {
         // given
         val userWallet = createUserWallet(1L, 10000L)
-        given(userWalletRepository.getByUserIdWithLock(1L)).willReturn(userWallet)
+        given(userWalletRepository.getByUserId(1L)).willReturn(userWallet)
 
         // when
         userService.chargeBalance(1L, 5000L)
@@ -74,7 +74,7 @@ class UserServiceTest {
     fun `사용자 잔고 충전 시 충전 이력을 저장할 수 있다`() {
         // given
         val userWallet = createUserWallet(1L, 10000L)
-        given(userWalletRepository.getByUserIdWithLock(1L)).willReturn(userWallet)
+        given(userWalletRepository.getByUserId(1L)).willReturn(userWallet)
 
         // when
         userService.chargeBalance(1L, 5000L)
@@ -92,7 +92,7 @@ class UserServiceTest {
     fun `사용자 잔고를 사용할 수 있다`() {
         // given
         val userWallet = createUserWallet(1L, 10000L)
-        given(userWalletRepository.getByUserIdWithLock(1L)).willReturn(userWallet)
+        given(userWalletRepository.getByUserId(1L)).willReturn(userWallet)
 
         // when
         userService.useBalance(1L, 5000L)
@@ -106,7 +106,7 @@ class UserServiceTest {
     fun `사용자 잔고 사용 시 충전 이력을 사용할 수 있다`() {
         // given
         val userWallet = createUserWallet(1L, 10000L)
-        given(userWalletRepository.getByUserIdWithLock(1L)).willReturn(userWallet)
+        given(userWalletRepository.getByUserId(1L)).willReturn(userWallet)
 
         // when
         userService.useBalance(1L, 5000L)

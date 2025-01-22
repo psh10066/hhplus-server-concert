@@ -53,6 +53,30 @@ class UserServiceConcurrencyIT(
         assertThat(userWallet.balance).isEqualTo(0L)
     }
 
+    @Test
+    fun `동시에 충전과 사용 각각 5번씩 요청 이후 잔고의 정합성이 보장되어야 한다`() {
+        // given
+        userWalletJpaRepository.save(UserWalletEntity(userId = 1L, balance = 500L))
+
+        // when
+        concurrencyTestHelper(1,
+            Runnable { userService.chargeBalance(1L, 200L) },
+            Runnable { userService.useBalance(1L, 100L) },
+            Runnable { userService.chargeBalance(1L, 200L) },
+            Runnable { userService.chargeBalance(1L, 200L) },
+            Runnable { userService.useBalance(1L, 100L) },
+            Runnable { userService.chargeBalance(1L, 200L) },
+            Runnable { userService.useBalance(1L, 100L) },
+            Runnable { userService.chargeBalance(1L, 200L) },
+            Runnable { userService.useBalance(1L, 100L) },
+            Runnable { userService.useBalance(1L, 100L) },
+        )
+
+        // then
+        val userWallet = userWalletJpaRepository.findByUserId(1)!!
+        assertThat(userWallet.balance).isEqualTo(1000L)
+    }
+
     private fun concurrencyTestHelper(times: Int, vararg tasks: Runnable) {
         val executorService = Executors.newFixedThreadPool(times * tasks.size)
         try {
