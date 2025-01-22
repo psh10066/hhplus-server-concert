@@ -49,15 +49,17 @@ class UserInterceptorTest {
     }
 
     @Test
-    fun `헤더의 userId에 해당하는 사용자가 있으면 정상적으로 반환한다`() {
+    fun `헤더의 userId에 해당하는 사용자가 있으면 유저를 request에 추가한다`() {
         // given
         httpServletRequest.addHeader("userId", "1")
-        given(userService.getUser(1L)).willReturn(User(id = 1L, uuid = UUID.randomUUID(), name = "홍길동"))
+        val user = User(id = 1L, uuid = UUID.randomUUID(), name = "홍길동")
+        given(userService.getUser(1L)).willReturn(user)
 
         // when
         val result = userInterceptor.preHandle(httpServletRequest, mock(), mock())
 
         // then
         assertThat(result).isTrue()
+        assertThat(httpServletRequest.getAttribute("user")).isEqualTo(user)
     }
 }

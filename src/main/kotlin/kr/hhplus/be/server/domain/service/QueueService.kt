@@ -41,8 +41,8 @@ class QueueService(
         return queue
     }
 
-    fun readyPayment(token: String) {
-        val queue = queueRepository.findNotExpiredByToken(token)
+    fun readyPayment(userUuid: UUID) {
+        val queue = queueRepository.findNotExpiredByUserUuid(userUuid)
         if (queue?.isActive() != true) {
             throw CustomException(ErrorType.NOT_AN_ACTIVE_QUEUE)
         }
@@ -50,7 +50,7 @@ class QueueService(
         queueRepository.save(queue)
     }
 
-    fun expire(id: Long) {
-        queueRepository.deleteById(id)
+    fun expire(userUuid: UUID) {
+        queueRepository.deleteByUserUuid(userUuid)
     }
 }

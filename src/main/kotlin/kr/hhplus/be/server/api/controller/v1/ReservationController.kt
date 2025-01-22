@@ -5,7 +5,7 @@ import kr.hhplus.be.server.api.controller.v1.request.ConcertReservationRequest
 import kr.hhplus.be.server.api.controller.v1.response.ConcertPaymentResponse
 import kr.hhplus.be.server.api.controller.v1.response.ConcertReservationResponse
 import kr.hhplus.be.server.application.ReservationFacade
-import kr.hhplus.be.server.domain.model.queue.Queue
+import kr.hhplus.be.server.domain.model.user.User
 import kr.hhplus.be.server.support.response.ApiResponse
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -21,10 +21,10 @@ class ReservationController(
     @PostMapping("/concert")
     fun concertReservation(
         @RequestBody request: ConcertReservationRequest,
-        queue: Queue
+        user: User
     ): ApiResponse<ConcertReservationResponse> {
         val reservationId = reservationFacade.concertReservation(
-            queue = queue,
+            user = user,
             concertSeatId = request.concertSeatId
         )
         return ApiResponse.success(ConcertReservationResponse(reservationId = reservationId))
@@ -33,10 +33,10 @@ class ReservationController(
     @PostMapping("/concert/payment")
     fun concertPayment(
         @RequestBody request: ConcertPaymentRequest,
-        queue: Queue
+        user: User
     ): ApiResponse<ConcertPaymentResponse> {
         val paymentHistoryId = reservationFacade.concertPayment(
-            queue = queue,
+            user = user,
             reservationId = request.reservationId
         )
         return ApiResponse.success(ConcertPaymentResponse(paymentHistoryId = paymentHistoryId))

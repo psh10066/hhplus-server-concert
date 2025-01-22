@@ -4,7 +4,7 @@ import kr.hhplus.be.server.api.controller.v1.common.dto.PageResponseDto
 import kr.hhplus.be.server.api.controller.v1.response.GetConcertResponse
 import kr.hhplus.be.server.api.controller.v1.response.GetConcertScheduleResponse
 import kr.hhplus.be.server.api.controller.v1.response.GetConcertSeatResponse
-import kr.hhplus.be.server.domain.model.queue.Queue
+import kr.hhplus.be.server.domain.model.user.User
 import kr.hhplus.be.server.domain.service.ConcertService
 import kr.hhplus.be.server.support.response.ApiResponse
 import org.springframework.web.bind.annotation.*
@@ -19,7 +19,6 @@ class ConcertController(
     fun getConcerts(
         @RequestParam page: Int,
         @RequestParam size: Int,
-        queue: Queue
     ): ApiResponse<GetConcertResponse> {
         val concerts = concertService.findPage(page, size)
         val response = GetConcertResponse(PageResponseDto.map(concerts, {
@@ -31,7 +30,6 @@ class ConcertController(
     @GetMapping("/{concertId}/schedules")
     fun getSchedules(
         @PathVariable concertId: Long,
-        queue: Queue
     ): ApiResponse<GetConcertScheduleResponse> {
         val concertSchedules = concertService.findConcertSchedules(concertId)
         return ApiResponse.success(
@@ -44,7 +42,6 @@ class ConcertController(
     @GetMapping("/schedules/{concertScheduleId}/seats")
     fun getSeats(
         @PathVariable concertScheduleId: Long,
-        queue: Queue
     ): ApiResponse<GetConcertSeatResponse> {
         val concertSeats = concertService.findAvailableSeats(concertScheduleId)
         return ApiResponse.success(

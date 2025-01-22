@@ -2,7 +2,9 @@ package kr.hhplus.be.server.support.interceptor
 
 import kr.hhplus.be.server.domain.model.queue.Queue
 import kr.hhplus.be.server.domain.model.queue.QueueStatus
+import kr.hhplus.be.server.domain.model.user.User
 import kr.hhplus.be.server.domain.service.QueueService
+import kr.hhplus.be.server.domain.service.UserService
 import kr.hhplus.be.server.support.error.CustomException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -14,24 +16,26 @@ import org.springframework.mock.web.MockHttpServletRequest
 import java.time.LocalDateTime
 import java.util.*
 
-class QueueInterceptorTest {
+class QueueValidInterceptorTest {
 
     private lateinit var httpServletRequest: MockHttpServletRequest
     private lateinit var queueService: QueueService
-    private lateinit var queueInterceptor: QueueInterceptor
+    private lateinit var userService: UserService
+    private lateinit var queueValidInterceptor: QueueValidInterceptor
 
     @BeforeEach
     fun setUp() {
         httpServletRequest = MockHttpServletRequest()
         queueService = mock()
-        queueInterceptor = QueueInterceptor(queueService)
+        userService = mock()
+        queueValidInterceptor = QueueValidInterceptor(queueService, userService)
     }
 
     @Test
     fun `헤더에 token이 없으면 예외가 발생한다`() {
         // when then
         assertThatThrownBy {
-            queueInterceptor.preHandle(httpServletRequest, mock(), mock())
+            queueValidInterceptor.preHandle(httpServletRequest, mock(), mock())
         }
             .isInstanceOf(CustomException::class.java)
             .hasMessage("접근이 거부되었습니다.")
@@ -46,14 +50,14 @@ class QueueInterceptorTest {
 
         // when then
         assertThatThrownBy {
-            queueInterceptor.preHandle(httpServletRequest, mock(), mock())
+            queueValidInterceptor.preHandle(httpServletRequest, mock(), mock())
         }
             .isInstanceOf(CustomException::class.java)
             .hasMessage("접근이 거부되었습니다.")
     }
 
     @Test
-    fun `헤더의 token으로 활성화된 대기열을 조회할 수 있으면 정상적으로 반환한다`() {
+    fun `헤더의 token으로 활성화된 대기열을 조회할 수 있으면 유저를 request에 추가한다`() {
         // given
         val token = "token:123"
         httpServletRequest.addHeader("token", token)
@@ -65,12 +69,15 @@ class QueueInterceptorTest {
             token = token,
             expiredAt = LocalDateTime.now().plusMinutes(10)
         )
+        val user = User(id = 123, uuid = queue.userUuid, name = "홍길동")
         given(queueService.getActiveQueue(token)).willReturn(queue)
+        given(userService.getUser(queue.userUuid)).willReturn(user)
 
         // when
-        val result = queueInterceptor.preHandle(httpServletRequest, mock(), mock())
+        val result = queueValidInterceptor.preHandle(httpServletRequest, mock(), mock())
 
         // then
         assertThat(result).isTrue()
+        assertThat(httpServletRequest.getAttribute("user")).isEqualTo(user)
     }
 }

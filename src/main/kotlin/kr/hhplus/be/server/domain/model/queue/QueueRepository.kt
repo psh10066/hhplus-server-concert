@@ -12,5 +12,5 @@ interface QueueRepository {
 
     fun findNotExpiredByToken(token: String): Queue?
 
-    fun deleteById(id: Long)
+    fun deleteByUserUuid(userUuid: UUID)
 }

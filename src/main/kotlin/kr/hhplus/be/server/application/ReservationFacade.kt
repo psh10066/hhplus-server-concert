@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.application
 
-import kr.hhplus.be.server.domain.model.queue.Queue
+import kr.hhplus.be.server.domain.model.user.User
 import kr.hhplus.be.server.domain.service.*
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Isolation
@@ -16,27 +16,25 @@ class ReservationFacade(
 ) {
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    fun concertReservation(queue: Queue, concertSeatId: Long): Long {
-        val user = userService.getUser(queue.userUuid)
+    fun concertReservation(user: User, concertSeatId: Long): Long {
         val concertSeat = concertService.getConcertSeatWithLock(concertSeatId)
         val reservationId = reservationService.concertReservation(
             userId = user.id,
             concertSeatId = concertSeat.id
         )
-        queueService.readyPayment(queue.token)
+        queueService.readyPayment(user.uuid)
         return reservationId
     }
 
     @Transactional
-    fun concertPayment(queue: Queue, reservationId: Long): Long {
-        val user = userService.getUser(queue.userUuid)
+    fun concertPayment(user: User, reservationId: Long): Long {
         val reservation = reservationService.payReservation(reservationId)
         val concert = concertService.getConcertBySeatId(reservation.concertSeatId)
 
         userService.useBalance(userId = user.id, amount = concert.price)
         val paymentHistory = paymentService.pay(reservationId = reservation.id, userId = user.id, amount = concert.price)
 
-        queueService.expire(queue.id)
+        queueService.expire(user.uuid)
         return paymentHistory.id
     }
 }
