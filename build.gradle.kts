@@ -59,6 +59,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mysql")
+	testImplementation("com.redis:testcontainers-redis:2.2.2")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
 
@@ -77,6 +78,9 @@ dependencies {
 	// QueryDSL
 	implementation("com.querydsl:querydsl-jpa:${dependencyManagement.importedProperties["querydsl.version"]}:jakarta")
 	kapt("com.querydsl:querydsl-apt:${dependencyManagement.importedProperties["querydsl.version"]}:jakarta")
+
+	// Redisson
+	implementation("org.redisson:redisson-spring-boot-starter:3.43.0")
 }
 
 // OpenAPI Specification
