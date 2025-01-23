@@ -24,6 +24,10 @@
 
 ### 2. [동시성 제어 방식 분석 보고서](docs/concurrency-control.md)
 
+## [6주차] 동시성 처리
+
+### 1. [동시성 제어 방식 비교 및 적용 사례 분석](docs/concurrency-control-v2.md)
+
 ## Getting Started
 
 ### Prerequisites
