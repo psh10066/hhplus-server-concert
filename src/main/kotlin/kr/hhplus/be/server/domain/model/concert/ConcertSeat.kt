@@ -23,4 +23,8 @@ class ConcertSeat(
         }
         status = ConcertSeatStatus.PAYMENT_COMPLETED
     }
+
+    fun cancelReservation() {
+        status = ConcertSeatStatus.AVAILABLE
+    }
 }

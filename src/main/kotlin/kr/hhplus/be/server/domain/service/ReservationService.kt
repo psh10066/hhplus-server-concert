@@ -30,4 +30,10 @@ class ReservationService(
         reservation.pay(clock)
         return reservationRepository.save(reservation)
     }
+
+    fun expireReservations(): List<Reservation> {
+        val reservations = reservationRepository.findAll().filter { !it.isReserved(clock) }
+        reservationRepository.deleteAll(reservations)
+        return reservations
+    }
 }

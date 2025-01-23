@@ -26,4 +26,16 @@ class ReservationRepositoryImpl(
         return reservationJpaRepository.findByIdOrNull(id)?.toModel()
             ?: throw CustomException(ErrorType.RESERVATION_NOT_FOUND)
     }
+
+    override fun findAll(): List<Reservation> {
+        return reservationJpaRepository.findAll().map {
+            it.toModel()
+        }
+    }
+
+    override fun deleteAll(reservations: List<Reservation>) {
+        return reservationJpaRepository.deleteAll(reservations.map {
+            ReservationEntity.from(it)
+        })
+    }
 }

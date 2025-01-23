@@ -26,6 +26,12 @@ class ReservationFacade(
     }
 
     @Transactional
+    fun expireReservations() {
+        val reservations = reservationService.expireReservations()
+        concertService.cancelSeatReservation(reservations.map { it.concertSeatId })
+    }
+
+    @Transactional
     fun concertPayment(user: User, reservationId: Long): Long {
         val reservation = reservationService.payReservation(reservationId)
         concertService.completePaymentSeat(reservation.concertSeatId)

@@ -26,4 +26,10 @@ class ConcertSeatRepositoryImpl(
     override fun saveAndFlush(concertSeat: ConcertSeat): ConcertSeat {
         return concertSeatJpaRepository.saveAndFlush(ConcertSeatEntity.from(concertSeat)).toModel()
     }
+
+    override fun getAllById(concertSeatIds: List<Long>): List<ConcertSeat> {
+        return concertSeatJpaRepository.findAllById(concertSeatIds).map {
+            it.toModel()
+        }
+    }
 }

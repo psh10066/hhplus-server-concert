@@ -7,4 +7,6 @@ interface ConcertSeatRepository {
     fun getById(id: Long): ConcertSeat
 
     fun saveAndFlush(concertSeat: ConcertSeat): ConcertSeat
+
+    fun getAllById(concertSeatIds: List<Long>): List<ConcertSeat>
 }

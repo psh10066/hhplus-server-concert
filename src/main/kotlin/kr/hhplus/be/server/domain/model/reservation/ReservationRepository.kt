@@ -7,4 +7,8 @@ interface ReservationRepository {
     fun save(reservation: Reservation): Reservation
 
     fun getById(id: Long): Reservation
+
+    fun findAll(): List<Reservation>
+
+    fun deleteAll(reservations: List<Reservation>)
 }
