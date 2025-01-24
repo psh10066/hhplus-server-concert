@@ -12,6 +12,10 @@ services:
     volumes:
       - ./data/mysql/:/var/lib/mysql
       - ./src/test/resources/db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
 
 networks:
   default:

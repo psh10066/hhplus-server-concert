@@ -1,9 +1,8 @@
 package kr.hhplus.be.server.infrastructure.dao.concert
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import kr.hhplus.be.server.domain.model.concert.ConcertSeat
+import kr.hhplus.be.server.domain.model.concert.ConcertSeatStatus
 import kr.hhplus.be.server.infrastructure.dao.BaseEntity
 
 @Entity
@@ -16,6 +15,14 @@ class ConcertSeatEntity(
 
     @Column(nullable = false)
     val seatNumber: Int,
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    val status: ConcertSeatStatus = ConcertSeatStatus.AVAILABLE,
+
+    @Version
+    @Column(nullable = false)
+    val version: Long = 0,
 ) : BaseEntity(id) {
 
     fun toModel(): ConcertSeat {
@@ -23,6 +30,8 @@ class ConcertSeatEntity(
             id = id,
             concertScheduleId = concertScheduleId,
             seatNumber = seatNumber,
+            status = status,
+            version = version,
         )
     }
 
@@ -32,6 +41,8 @@ class ConcertSeatEntity(
                 id = concertSeat.id,
                 concertScheduleId = concertSeat.concertScheduleId,
                 seatNumber = concertSeat.seatNumber,
+                status = concertSeat.status,
+                version = concertSeat.version,
             )
         }
     }

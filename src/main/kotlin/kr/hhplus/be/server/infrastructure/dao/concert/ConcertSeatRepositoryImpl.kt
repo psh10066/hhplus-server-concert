@@ -23,8 +23,13 @@ class ConcertSeatRepositoryImpl(
             ?: throw CustomException(ErrorType.CONCERT_SEAT_NOT_FOUND)
     }
 
-    override fun getByIdWithLock(id: Long): ConcertSeat {
-        return concertSeatJpaRepository.findForUpdateById(id)?.toModel()
-            ?: throw CustomException(ErrorType.CONCERT_SEAT_NOT_FOUND)
+    override fun saveAndFlush(concertSeat: ConcertSeat): ConcertSeat {
+        return concertSeatJpaRepository.saveAndFlush(ConcertSeatEntity.from(concertSeat)).toModel()
+    }
+
+    override fun getAllById(concertSeatIds: List<Long>): List<ConcertSeat> {
+        return concertSeatJpaRepository.findAllById(concertSeatIds).map {
+            it.toModel()
+        }
     }
 }
