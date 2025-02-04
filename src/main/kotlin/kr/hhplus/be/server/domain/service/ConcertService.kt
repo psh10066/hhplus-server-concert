@@ -22,6 +22,10 @@ class ConcertService(
         return concertRepository.findPage(page, size)
     }
 
+    fun findConcerts(concertIds: List<Long>): List<Concert> {
+        return concertRepository.findAllById(concertIds)
+    }
+
     fun findConcertSchedules(concertId: Long): List<ConcertSchedule> {
         return concertScheduleRepository.findAvailablesByConcertId(concertId)
     }

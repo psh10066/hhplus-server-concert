@@ -1,11 +1,13 @@
 package kr.hhplus.be.server.infrastructure.dao.reservation
 
+import kr.hhplus.be.server.domain.model.reservation.ConcertReservationCount
 import kr.hhplus.be.server.domain.model.reservation.Reservation
 import kr.hhplus.be.server.domain.model.reservation.ReservationRepository
 import kr.hhplus.be.server.support.error.CustomException
 import kr.hhplus.be.server.support.error.ErrorType
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
+import java.time.LocalDate
 
 @Component
 class ReservationRepositoryImpl(
@@ -37,5 +39,9 @@ class ReservationRepositoryImpl(
         return reservationJpaRepository.deleteAll(reservations.map {
             ReservationEntity.from(it)
         })
+    }
+
+    override fun findConcertReservationCountsByDate(date: LocalDate): List<ConcertReservationCount> {
+        return reservationJpaRepository.findConcertReservationCountsByDate(date)
     }
 }
