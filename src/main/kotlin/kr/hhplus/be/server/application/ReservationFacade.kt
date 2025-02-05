@@ -3,6 +3,7 @@ package kr.hhplus.be.server.application
 import kr.hhplus.be.server.domain.model.concert.Concert
 import kr.hhplus.be.server.domain.model.user.User
 import kr.hhplus.be.server.domain.service.*
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.time.Clock
@@ -49,6 +50,7 @@ class ReservationFacade(
         return paymentHistory.id
     }
 
+    @Cacheable(value = ["popularConcerts"])
     @Transactional(readOnly = true)
     fun getPopularConcerts(): List<Concert> {
         val size = 20
