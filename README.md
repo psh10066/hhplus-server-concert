@@ -28,6 +28,12 @@
 
 ### 1. [동시성 제어 방식 비교 및 적용 사례 분석](docs/concurrency-control-v2.md)
 
+## [7주차] 캐시 도입 및 Redis 기반 대기열 구현
+
+### 1. [캐시 도입 보고서](docs/caching.md)
+
+### 2. [캐시 전략 패턴 비교 분석](docs/caching-pattern.md)
+
 ## Getting Started
 
 ### Prerequisites
