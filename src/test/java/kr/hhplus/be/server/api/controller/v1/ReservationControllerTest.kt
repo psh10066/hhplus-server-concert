@@ -50,7 +50,7 @@ class ReservationControllerTest(
         // when then
         mockMvc.perform(
             post("/api/v1/reservations/concert")
-                .header("token", "token:123")
+                .header("token", activeToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(ConcertReservationRequest(concertSeatId = 2L)))
         )
@@ -93,7 +93,7 @@ class ReservationControllerTest(
         // when then
         mockMvc.perform(
             post("/api/v1/reservations/concert/payment")
-                .header("token", "token:123")
+                .header("token", activeToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(ConcertPaymentRequest(reservationId = 1L)))
         )
@@ -136,7 +136,7 @@ class ReservationControllerTest(
         // when then
         mockMvc.perform(
             get("/api/v1/reservations/concert/popular")
-                .header("token", "token:123")
+                .header("token", activeToken)
         )
             .andExpect(status().isOk)
             .andDo(

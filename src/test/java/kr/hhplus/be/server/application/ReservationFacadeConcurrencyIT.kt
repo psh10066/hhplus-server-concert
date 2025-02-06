@@ -1,12 +1,11 @@
 package kr.hhplus.be.server.application
 
-import kr.hhplus.be.server.domain.model.queue.QueueStatus
+import kr.hhplus.be.server.domain.model.queue.Queue
 import kr.hhplus.be.server.domain.model.user.User
 import kr.hhplus.be.server.helper.CleanUp
 import kr.hhplus.be.server.infrastructure.dao.concert.ConcertSeatEntity
 import kr.hhplus.be.server.infrastructure.dao.concert.ConcertSeatJpaRepository
-import kr.hhplus.be.server.infrastructure.dao.queue.QueueEntity
-import kr.hhplus.be.server.infrastructure.dao.queue.QueueJpaRepository
+import kr.hhplus.be.server.infrastructure.dao.queue.QueueRedisRepository
 import kr.hhplus.be.server.infrastructure.dao.reservation.ReservationJpaRepository
 import kr.hhplus.be.server.infrastructure.dao.user.UserEntity
 import kr.hhplus.be.server.infrastructure.dao.user.UserJpaRepository
@@ -15,15 +14,15 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import java.time.LocalDateTime
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
+import kotlin.time.Duration.Companion.minutes
 
 @SpringBootTest
 class ReservationFacadeConcurrencyIT(
     @Autowired private val userJpaRepository: UserJpaRepository,
-    @Autowired private val queueJpaRepository: QueueJpaRepository,
     @Autowired private val concertSeatJpaRepository: ConcertSeatJpaRepository,
+    @Autowired private val queueRedisRepository: QueueRedisRepository,
     @Autowired private val reservationJpaRepository: ReservationJpaRepository,
     @Autowired private val reservationFacade: ReservationFacade,
     @Autowired private val cleanUp: CleanUp
@@ -41,15 +40,9 @@ class ReservationFacadeConcurrencyIT(
         for (i in 1..5) {
             val user = userJpaRepository.save(UserEntity(name = "user$i")).toModel()
             users.add(user)
-            queueJpaRepository.save(
-                QueueEntity(
-                    userUuid = user.uuid,
-                    status = QueueStatus.ACTIVE,
-                    token = "token:$i",
-                    expiredAt = LocalDateTime.now().plusMinutes(10)
-                )
-            )
+            queueRedisRepository.addWaitingToken(Queue.create(user.uuid).token, i.toDouble())
         }
+        queueRedisRepository.activateTokens(5, 5.minutes)
         val concertSeat = concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 12))
 
         // when

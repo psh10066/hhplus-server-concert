@@ -1,16 +1,19 @@
 package kr.hhplus.be.server.domain.model.queue
 
 import java.util.*
+import kotlin.time.Duration
 
 interface QueueRepository {
 
-    fun findNotExpiredByUserUuid(userUuid: UUID): Queue?
+    fun addWaitingToken(token: String, score: Double)
 
-    fun save(queue: Queue): Queue
+    fun findWaitingTokenRank(token: String): Long?
 
-    fun getNotExpiredWithOrder(count: Int): List<Queue>
+    fun existActiveToken(token: String): Boolean
 
-    fun findNotExpiredByToken(token: String): Queue?
+    fun activateTokens(count: Long, ttl: Duration)
 
-    fun deleteByUserUuid(userUuid: UUID)
+    fun updateActiveTokenTTLByUserUuid(userUuid: UUID, ttl: Duration)
+
+    fun deleteActiveTokenByUserUuid(userUuid: UUID)
 }

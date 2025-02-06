@@ -37,7 +37,7 @@ class ConcertControllerTest(
     fun getConcerts() {
         mockMvc.perform(
             get("/api/v1/concerts")
-                .header("token", "token:123")
+                .header("token", activeToken)
                 .param("page", "1")
                 .param("size", "10")
         )
@@ -77,7 +77,7 @@ class ConcertControllerTest(
     fun getSchedules() {
         mockMvc.perform(
             get("/api/v1/concerts/{concertId}/schedules", 1L)
-                .header("token", "token:123")
+                .header("token", activeToken)
         )
             .andExpect(status().isOk)
             .andDo(
@@ -111,7 +111,7 @@ class ConcertControllerTest(
     fun getSeats() {
         mockMvc.perform(
             get("/api/v1/concerts/schedules/{concertScheduleId}/seats", 1L)
-                .header("token", "token:123")
+                .header("token", activeToken)
         )
             .andExpect(status().isOk)
             .andDo(
