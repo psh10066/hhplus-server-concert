@@ -11,6 +11,6 @@ class QueueScheduler(
 
     @Scheduled(fixedRate = 10000)
     fun activateQueue() {
-        queueService.activate()
+        queueService.activate(4000)
     }
 }

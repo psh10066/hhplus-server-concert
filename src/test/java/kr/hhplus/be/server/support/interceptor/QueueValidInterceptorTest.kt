@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.support.interceptor
 
 import kr.hhplus.be.server.domain.model.queue.Queue
-import kr.hhplus.be.server.domain.model.queue.QueueStatus
 import kr.hhplus.be.server.domain.model.user.User
 import kr.hhplus.be.server.domain.service.QueueService
 import kr.hhplus.be.server.domain.service.UserService
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito.mock
 import org.springframework.mock.web.MockHttpServletRequest
-import java.time.LocalDateTime
 import java.util.*
 
 class QueueValidInterceptorTest {
@@ -63,11 +61,8 @@ class QueueValidInterceptorTest {
         httpServletRequest.addHeader("token", token)
 
         val queue = Queue(
-            id = 1L,
             userUuid = UUID.randomUUID(),
-            status = QueueStatus.ACTIVE,
             token = token,
-            expiredAt = LocalDateTime.now().plusMinutes(10)
         )
         val user = User(id = 123, uuid = queue.userUuid, name = "홍길동")
         given(queueService.getActiveQueue(token)).willReturn(queue)
