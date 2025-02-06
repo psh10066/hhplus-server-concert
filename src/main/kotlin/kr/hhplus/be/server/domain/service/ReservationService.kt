@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.service
 
+import kr.hhplus.be.server.domain.model.reservation.ConcertReservationCount
 import kr.hhplus.be.server.domain.model.reservation.Reservation
 import kr.hhplus.be.server.domain.model.reservation.ReservationRepository
 import kr.hhplus.be.server.support.error.CustomException
@@ -7,6 +8,7 @@ import kr.hhplus.be.server.support.error.ErrorType
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Clock
+import java.time.LocalDate
 
 @Service
 class ReservationService(
@@ -35,5 +37,10 @@ class ReservationService(
         val reservations = reservationRepository.findAll().filter { !it.isReserved(clock) }
         reservationRepository.deleteAll(reservations)
         return reservations
+    }
+
+    fun getConcertReservationCounts(date: LocalDate, size: Int): List<ConcertReservationCount> {
+        return reservationRepository.findConcertReservationCountsByDate(date)
+            .take(size)
     }
 }

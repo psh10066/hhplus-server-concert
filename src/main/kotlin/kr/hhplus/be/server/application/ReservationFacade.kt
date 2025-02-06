@@ -1,12 +1,17 @@
 package kr.hhplus.be.server.application
 
+import kr.hhplus.be.server.domain.model.concert.Concert
 import kr.hhplus.be.server.domain.model.user.User
 import kr.hhplus.be.server.domain.service.*
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
+import java.time.Clock
+import java.time.LocalDate
 
 @Component
 class ReservationFacade(
+    private val clock: Clock,
     private val userService: UserService,
     private val queueService: QueueService,
     private val concertService: ConcertService,
@@ -43,5 +48,18 @@ class ReservationFacade(
 
         queueService.expire(user.uuid)
         return paymentHistory.id
+    }
+
+    @Cacheable(value = ["popularConcerts"])
+    @Transactional(readOnly = true)
+    fun getPopularConcerts(): List<Concert> {
+        val size = 20
+        val reservationCounts = reservationService.getConcertReservationCounts(LocalDate.now(clock), size)
+        val concerts = concertService.findConcerts(reservationCounts.map { it.concertId })
+
+        val concertMap: Map<Long, Concert> = concerts.associateBy { it.id }
+        return reservationCounts
+            .sortedByDescending { it.count }
+            .mapNotNull { concertMap[it.concertId] }
     }
 }

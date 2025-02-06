@@ -1,0 +1,3 @@
+GRANT ALL PRIVILEGES ON hhplus.* TO 'application'@'%';
+GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'application'@'%';
+FLUSH PRIVILEGES;

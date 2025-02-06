@@ -26,4 +26,10 @@ class ConcertRepositoryImpl(
         return concertJpaRepository.findByIdOrNull(id)?.toModel()
             ?: throw CustomException(ErrorType.CONCERT_NOT_FOUND)
     }
+
+    override fun findAllById(ids: List<Long>): List<Concert> {
+        return concertJpaRepository.findAllById(ids).map {
+            it.toModel()
+        }
+    }
 }

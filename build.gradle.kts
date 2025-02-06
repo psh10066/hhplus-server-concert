@@ -63,6 +63,9 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
 
+	// ObjectMapper
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
 	// Instancio
 	testImplementation("org.instancio:instancio-junit:5.2.1")
 
