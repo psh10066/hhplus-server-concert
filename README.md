@@ -34,6 +34,8 @@
 
 ### 2. [캐시 전략 패턴 비교 분석](docs/caching-pattern.md)
 
+### 3. [대기열 관리 설계 변경 보고서](docs/redis-queue.md)
+
 ## Getting Started
 
 ### Prerequisites
