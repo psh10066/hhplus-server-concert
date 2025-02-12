@@ -5,5 +5,5 @@ import java.time.LocalDate
 
 interface ReservationCustomRepository {
 
-    fun findConcertReservationCountsByDate(date: LocalDate): List<ConcertReservationCount>
+    fun findConcertReservationCountsByDate(date: LocalDate, size: Int): List<ConcertReservationCount>
 }

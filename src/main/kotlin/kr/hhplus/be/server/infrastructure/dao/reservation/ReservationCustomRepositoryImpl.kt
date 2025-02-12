@@ -16,7 +16,7 @@ class ReservationCustomRepositoryImpl(
     private val queryFactory: JPAQueryFactory
 ) : ReservationCustomRepository {
 
-    override fun findConcertReservationCountsByDate(date: LocalDate): List<ConcertReservationCount> {
+    override fun findConcertReservationCountsByDate(date: LocalDate, size: Int): List<ConcertReservationCount> {
         return queryFactory
             .select(Projections.constructor(ConcertReservationCount::class.java, concertScheduleEntity.concertId, reservationEntity.count()))
             .from(concertScheduleEntity)
@@ -27,6 +27,8 @@ class ReservationCustomRepositoryImpl(
                 reservationEntity.createdAt.between(date.atStartOfDay(), date.atTime(LocalTime.MAX))
             )
             .groupBy(concertScheduleEntity.concertId)
+            .orderBy(reservationEntity.count().desc())
+            .limit(size.toLong())
             .fetch()
     }
 }

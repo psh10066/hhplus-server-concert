@@ -40,7 +40,6 @@ class ReservationService(
     }
 
     fun getConcertReservationCounts(date: LocalDate, size: Int): List<ConcertReservationCount> {
-        return reservationRepository.findConcertReservationCountsByDate(date)
-            .take(size)
+        return reservationRepository.findConcertReservationCountsByDate(date, size)
     }
 }

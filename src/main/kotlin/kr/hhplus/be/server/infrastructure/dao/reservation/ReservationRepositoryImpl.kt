@@ -41,7 +41,7 @@ class ReservationRepositoryImpl(
         })
     }
 
-    override fun findConcertReservationCountsByDate(date: LocalDate): List<ConcertReservationCount> {
-        return reservationJpaRepository.findConcertReservationCountsByDate(date)
+    override fun findConcertReservationCountsByDate(date: LocalDate, size: Int): List<ConcertReservationCount> {
+        return reservationJpaRepository.findConcertReservationCountsByDate(date, size)
     }
 }

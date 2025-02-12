@@ -14,5 +14,5 @@ interface ReservationRepository {
 
     fun deleteAll(reservations: List<Reservation>)
 
-    fun findConcertReservationCountsByDate(date: LocalDate): List<ConcertReservationCount>
+    fun findConcertReservationCountsByDate(date: LocalDate, size: Int): List<ConcertReservationCount>
 }

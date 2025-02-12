@@ -53,7 +53,7 @@ class ReservationRepositoryImplTest(
         reservationJpaRepository.save(createReservation(concertSeatId = 4, createdAt = today)) // concert3
 
         // when
-        val result = reservationRepositoryImpl.findConcertReservationCountsByDate(today)
+        val result = reservationRepositoryImpl.findConcertReservationCountsByDate(today, 20)
 
         // then
         assertThat(result).hasSize(4)
