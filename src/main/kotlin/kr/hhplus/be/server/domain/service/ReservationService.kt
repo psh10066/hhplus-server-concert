@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.service
 
+import kr.hhplus.be.server.domain.event.ConcertReservationExpiredEvent
 import kr.hhplus.be.server.domain.event.ConcertReservationFinishedEvent
 import kr.hhplus.be.server.domain.model.reservation.ConcertReservationCount
 import kr.hhplus.be.server.domain.model.reservation.Reservation
@@ -47,9 +48,12 @@ class ReservationService(
         return reservationRepository.save(reservation)
     }
 
+    @Transactional
     fun expireReservations(): List<Reservation> {
         val reservations = reservationRepository.findAll().filter { !it.isReserved(clock) }
         reservationRepository.deleteAll(reservations)
+
+        applicationEventPublisher.publishEvent(ConcertReservationExpiredEvent(reservations))
         return reservations
     }
 

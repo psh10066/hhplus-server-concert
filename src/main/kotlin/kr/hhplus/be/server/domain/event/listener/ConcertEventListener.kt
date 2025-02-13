@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.event.listener
 
+import kr.hhplus.be.server.domain.event.ConcertReservationExpiredEvent
 import kr.hhplus.be.server.domain.event.ConcertReservationFinishedEvent
 import kr.hhplus.be.server.domain.service.ConcertService
 import org.slf4j.LoggerFactory
@@ -25,5 +26,11 @@ class ConcertEventListener(
         } catch (e: Exception) {
             log.error("[콘서트] 좌석 예약 취소 실패", e)
         }
+    }
+
+    @Async
+    @TransactionalEventListener(value = [ConcertReservationExpiredEvent::class], phase = TransactionPhase.AFTER_COMMIT)
+    fun cancelSeatReservation(event: ConcertReservationExpiredEvent) {
+        concertService.cancelSeatReservation(event.reservations.map { it.concertSeatId })
     }
 }
