@@ -36,6 +36,10 @@
 
 ### 3. [대기열 관리 설계 변경 보고서](docs/redis-queue.md)
 
+## [8주차] DB 인덱스 및 MSA와 트랜잭션
+
+### 1. [데이터베이스 인덱스 기반 성능 개선 보고서](docs/db-index.md)
+
 ## Getting Started
 
 ### Prerequisites
