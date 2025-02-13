@@ -52,6 +52,17 @@ class ConcertService(
     }
 
     @Transactional
+    fun cancelSeat(concertSeatId: Long) {
+        val concertSeat = concertSeatRepository.getById(concertSeatId)
+        concertSeat.cancelReservation()
+        try {
+            concertSeatRepository.saveAndFlush(concertSeat)
+        } catch (e: OptimisticLockingFailureException) {
+            throw CustomException(ErrorType.RESERVATION_NOT_FOUND)
+        }
+    }
+
+    @Transactional
     fun completePaymentSeat(concertSeatId: Long) {
         val concertSeat = concertSeatRepository.getById(concertSeatId)
         concertSeat.completePayment()

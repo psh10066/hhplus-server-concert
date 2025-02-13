@@ -7,13 +7,15 @@ import kr.hhplus.be.server.api.controller.v1.response.ConcertReservationResponse
 import kr.hhplus.be.server.api.controller.v1.response.GetPopularConcertResponse
 import kr.hhplus.be.server.application.ReservationFacade
 import kr.hhplus.be.server.domain.model.user.User
+import kr.hhplus.be.server.domain.service.ReservationService
 import kr.hhplus.be.server.support.response.ApiResponse
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v1/reservations")
 class ReservationController(
-    private val reservationFacade: ReservationFacade
+    private val reservationFacade: ReservationFacade,
+    private val reservationService: ReservationService
 ) {
 
     @PostMapping("/concert")
@@ -21,7 +23,7 @@ class ReservationController(
         @RequestBody request: ConcertReservationRequest,
         user: User
     ): ApiResponse<ConcertReservationResponse> {
-        val reservationId = reservationFacade.concertReservation(
+        val reservationId = reservationService.concertReservation(
             user = user,
             concertSeatId = request.concertSeatId
         )

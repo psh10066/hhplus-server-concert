@@ -1,0 +1,26 @@
+package kr.hhplus.be.server.domain.event.listener
+
+import kr.hhplus.be.server.domain.event.ConcertReservationFinishedEvent
+import kr.hhplus.be.server.domain.service.QueueService
+import org.slf4j.LoggerFactory
+import org.springframework.scheduling.annotation.Async
+import org.springframework.stereotype.Component
+import org.springframework.transaction.event.TransactionPhase
+import org.springframework.transaction.event.TransactionalEventListener
+
+@Component
+class QueueEventListener(
+    private val queueService: QueueService
+) {
+    private val log = LoggerFactory.getLogger(javaClass)
+
+    @Async
+    @TransactionalEventListener(value = [ConcertReservationFinishedEvent::class], phase = TransactionPhase.AFTER_COMMIT)
+    fun readyPayment(event: ConcertReservationFinishedEvent) {
+        try {
+            queueService.readyPayment(event.user.uuid)
+        } catch (e: Exception) {
+            log.error("[대기열] 결제 준비 실패", e)
+        }
+    }
+}
