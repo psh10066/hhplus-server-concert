@@ -52,6 +52,17 @@ class ConcertService(
     }
 
     @Transactional
+    fun cancelSeat(concertSeatId: Long) {
+        val concertSeat = concertSeatRepository.getById(concertSeatId)
+        concertSeat.cancelReservation()
+        try {
+            concertSeatRepository.saveAndFlush(concertSeat)
+        } catch (e: OptimisticLockingFailureException) {
+            throw CustomException(ErrorType.RESERVATION_NOT_FOUND)
+        }
+    }
+
+    @Transactional
     fun completePaymentSeat(concertSeatId: Long) {
         val concertSeat = concertSeatRepository.getById(concertSeatId)
         concertSeat.completePayment()
@@ -59,6 +70,17 @@ class ConcertService(
             concertSeatRepository.saveAndFlush(concertSeat)
         } catch (e: OptimisticLockingFailureException) {
             throw CustomException(ErrorType.NOT_PAYABLE_RESERVATION)
+        }
+    }
+
+    @Transactional
+    fun rollbackPaymentSeat(concertSeatId: Long) {
+        val concertSeat = concertSeatRepository.getById(concertSeatId)
+        concertSeat.rollbackPayment()
+        try {
+            concertSeatRepository.saveAndFlush(concertSeat)
+        } catch (e: OptimisticLockingFailureException) {
+            throw CustomException(ErrorType.CANNOT_ROLLBACK_PAY_RESERVATION)
         }
     }
 

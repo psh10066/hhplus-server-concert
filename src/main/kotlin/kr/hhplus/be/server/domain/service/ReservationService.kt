@@ -1,30 +1,54 @@
 package kr.hhplus.be.server.domain.service
 
-import kr.hhplus.be.server.domain.model.reservation.ConcertReservationCount
+import kr.hhplus.be.server.domain.event.ConcertReservationExpiredEvent
+import kr.hhplus.be.server.domain.event.ConcertReservationFailureEvent
+import kr.hhplus.be.server.domain.event.ConcertReservationSucceedEvent
+import kr.hhplus.be.server.domain.model.concert.Concert
 import kr.hhplus.be.server.domain.model.reservation.Reservation
 import kr.hhplus.be.server.domain.model.reservation.ReservationRepository
+import kr.hhplus.be.server.domain.model.user.User
+import kr.hhplus.be.server.support.client.ConcertApiClient
 import kr.hhplus.be.server.support.error.CustomException
 import kr.hhplus.be.server.support.error.ErrorType
+import org.springframework.cache.annotation.Cacheable
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Clock
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Service
 class ReservationService(
     private val clock: Clock,
-    private val reservationRepository: ReservationRepository
+    private val reservationRepository: ReservationRepository,
+    private val concertApiClient: ConcertApiClient,
+    private val applicationEventPublisher: ApplicationEventPublisher
 ) {
 
     @Transactional
-    fun concertReservation(userId: Long, concertId: Long, concertSeatId: Long): Long {
-        val reservations = reservationRepository.findConcertReservation(concertSeatId)
-        if (reservations.any { it.isReserved(clock) }) {
-            throw CustomException(ErrorType.ALREADY_RESERVED_CONCERT_SEAT)
-        }
+    fun concertReservation(user: User, concertSeatId: Long): Long {
+        concertApiClient.reserveSeat(concertSeatId)
+        try {
+            val concert = concertApiClient.getConcertBySeatId(concertSeatId)
+            val reservations = reservationRepository.findConcertReservation(concertSeatId)
+            if (reservations.any { it.isReserved(clock) }) {
+                throw CustomException(ErrorType.ALREADY_RESERVED_CONCERT_SEAT)
+            }
 
-        val reservation = Reservation.reserve(clock, concertId, concertSeatId, userId)
-        return reservationRepository.save(reservation).id
+            val reservation = Reservation.reserve(clock, concert.id, concertSeatId, user.id)
+            val savedReservation = reservationRepository.save(reservation)
+
+            applicationEventPublisher.publishEvent(ConcertReservationSucceedEvent(user, concertSeatId, savedReservation))
+            return savedReservation.id
+        } catch (e: Exception) {
+            applicationEventPublisher.publishEvent(ConcertReservationFailureEvent(user, concertSeatId))
+            throw e
+        }
+    }
+
+    fun getReservation(id: Long): Reservation {
+        return reservationRepository.getById(id)
     }
 
     fun payReservation(id: Long): Reservation {
@@ -33,13 +57,30 @@ class ReservationService(
         return reservationRepository.save(reservation)
     }
 
+    fun rollbackPayReservation(id: Long, expiredAt: LocalDateTime): Reservation {
+        val reservation = reservationRepository.getById(id)
+        reservation.rollbackPay(expiredAt)
+        return reservationRepository.save(reservation)
+    }
+
+    @Transactional
     fun expireReservations(): List<Reservation> {
         val reservations = reservationRepository.findAll().filter { !it.isReserved(clock) }
         reservationRepository.deleteAll(reservations)
+
+        applicationEventPublisher.publishEvent(ConcertReservationExpiredEvent(reservations))
         return reservations
     }
 
-    fun getConcertReservationCounts(date: LocalDate, size: Int): List<ConcertReservationCount> {
-        return reservationRepository.findConcertReservationCountsByDate(date, size)
+    @Cacheable(value = ["popularConcerts"])
+    fun getPopularConcerts(): List<Concert> {
+        val size = 20
+        val reservationCounts = reservationRepository.findConcertReservationCountsByDate(LocalDate.now(clock), size)
+        val concerts = concertApiClient.findConcerts(reservationCounts.map { it.concertId })
+
+        val concertMap: Map<Long, Concert> = concerts.associateBy { it.id }
+        return reservationCounts
+            .sortedByDescending { it.count }
+            .mapNotNull { concertMap[it.concertId] }
     }
 }

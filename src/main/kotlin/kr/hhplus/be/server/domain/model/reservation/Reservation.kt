@@ -43,4 +43,12 @@ class Reservation(
         status = ReservationStatus.PAYMENT_COMPLETED
         expiredAt = null
     }
+
+    fun rollbackPay(expiredAt: LocalDateTime) {
+        if (status != ReservationStatus.PAYMENT_COMPLETED) {
+            throw CustomException(ErrorType.CANNOT_ROLLBACK_PAY_RESERVATION)
+        }
+        status = ReservationStatus.RESERVED
+        this.expiredAt = expiredAt
+    }
 }

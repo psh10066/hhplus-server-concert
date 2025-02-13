@@ -12,4 +12,8 @@ class PaymentHistoryRepositoryImpl(
     override fun save(paymentHistory: PaymentHistory): PaymentHistory {
         return paymentHistoryJpaRepository.save(PaymentHistoryEntity.from(paymentHistory)).toModel()
     }
+
+    override fun deleteById(id: Long) {
+        paymentHistoryJpaRepository.deleteById(id)
+    }
 }

@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.application
+package kr.hhplus.be.server.domain.service
 
 import kr.hhplus.be.server.domain.model.queue.Queue
 import kr.hhplus.be.server.domain.model.user.User
@@ -19,14 +19,14 @@ import java.util.concurrent.Executors
 import kotlin.time.Duration.Companion.minutes
 
 @SpringBootTest
-class ReservationFacadeConcurrencyIT(
+class ReservationServiceConcurrencyIT(
     @Autowired private val userJpaRepository: UserJpaRepository,
     @Autowired private val concertJpaRepository: ConcertJpaRepository,
     @Autowired private val concertScheduleJpaRepository: ConcertScheduleJpaRepository,
     @Autowired private val concertSeatJpaRepository: ConcertSeatJpaRepository,
     @Autowired private val queueRedisRepository: QueueRedisRepository,
     @Autowired private val reservationJpaRepository: ReservationJpaRepository,
-    @Autowired private val reservationFacade: ReservationFacade,
+    @Autowired private val reservationService: ReservationService,
     @Autowired private val cleanUp: CleanUp
 ) {
 
@@ -52,7 +52,7 @@ class ReservationFacadeConcurrencyIT(
         // when
         concurrencyTestHelper(1, *users.map { user ->
             Runnable {
-                reservationFacade.concertReservation(user, concertSeat.id)
+                reservationService.concertReservation(user, concertSeat.id)
             }
         }.toTypedArray())
 

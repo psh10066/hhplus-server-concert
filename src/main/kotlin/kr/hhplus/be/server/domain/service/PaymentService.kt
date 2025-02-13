@@ -15,4 +15,8 @@ class PaymentService(
             amount = amount
         ))
     }
+
+    fun rollbackPay(paymentHistoryId: Long) {
+        paymentHistoryRepository.deleteById(paymentHistoryId)
+    }
 }
