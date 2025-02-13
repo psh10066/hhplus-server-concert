@@ -40,6 +40,8 @@
 
 ### 1. [데이터베이스 인덱스 기반 성능 개선 보고서](docs/db-index.md)
 
+### 2. [MSA 전환에 따른 트랜잭션 처리 방안](docs/msa.md)
+
 ## Getting Started
 
 ### Prerequisites
