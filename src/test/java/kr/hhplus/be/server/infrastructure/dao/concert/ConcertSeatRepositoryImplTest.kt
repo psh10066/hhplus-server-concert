@@ -36,7 +36,7 @@ class ConcertSeatRepositoryImplTest(
         val seat1 = concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = concertSchedule.id, seatNumber = 1))
         val seat2 = concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = concertSchedule.id, seatNumber = 2))
         val seat3 = concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = concertSchedule.id, seatNumber = 3))
-        val seat4 = concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = concertSchedule.id, seatNumber = 3))
+        val seat4 = concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = concertSchedule.id, seatNumber = 4))
         reservationJpaRepository.save(
             ReservationEntity(
                 concertId = concert.id,
