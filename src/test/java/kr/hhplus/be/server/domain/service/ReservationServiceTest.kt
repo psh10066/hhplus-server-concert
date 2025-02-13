@@ -37,7 +37,7 @@ class ReservationServiceTest {
 
         // when then
         assertThatThrownBy {
-            reservationService.concertReservation(1L, 3L)
+            reservationService.concertReservation(1L, 2L, 3L)
         }
             .isInstanceOf(CustomException::class.java)
             .hasMessage("이미 예약된 좌석입니다.")
@@ -52,10 +52,10 @@ class ReservationServiceTest {
         given(reservation1.isReserved(any())).willReturn(false)
 
         given(reservationRepository.findConcertReservation(any())).willReturn(listOf(reservation1, reservation2))
-        given(reservationRepository.save(any())).willReturn(Reservation(id = 2L, concertSeatId = 3L, userId = 1L, status = ReservationStatus.RESERVED))
+        given(reservationRepository.save(any())).willReturn(Reservation(id = 2L, concertId = 4L, concertSeatId = 3L, userId = 1L, status = ReservationStatus.RESERVED))
 
         // when
-        val result = reservationService.concertReservation(1L, 3L)
+        val result = reservationService.concertReservation(1L, 4L, 3L)
 
         // then
         assertThat(result).isEqualTo(2L)

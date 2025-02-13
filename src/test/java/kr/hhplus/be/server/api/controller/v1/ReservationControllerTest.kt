@@ -88,7 +88,7 @@ class ReservationControllerTest(
         concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 1, status = ConcertSeatStatus.AVAILABLE))
         concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 2, status = ConcertSeatStatus.AVAILABLE))
         concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 3, status = ConcertSeatStatus.RESERVED))
-        reservationJpaRepository.save(ReservationEntity(concertSeatId = 3L, userId = 1L, status = ReservationStatus.RESERVED, expiredAt = LocalDateTime.now().plusMinutes(3)))
+        reservationJpaRepository.save(ReservationEntity(concertId = 1, concertSeatId = 3L, userId = 1L, status = ReservationStatus.RESERVED, expiredAt = LocalDateTime.now().plusMinutes(3)))
 
         // when then
         mockMvc.perform(
@@ -131,7 +131,7 @@ class ReservationControllerTest(
         concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 1, status = ConcertSeatStatus.AVAILABLE))
         concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 2, status = ConcertSeatStatus.AVAILABLE))
         concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 3, status = ConcertSeatStatus.RESERVED))
-        reservationJpaRepository.save(ReservationEntity(concertSeatId = 3L, userId = 1L, status = ReservationStatus.RESERVED, expiredAt = LocalDateTime.now().plusMinutes(3)))
+        reservationJpaRepository.save(ReservationEntity(concertId = 1, concertSeatId = 3L, userId = 1L, status = ReservationStatus.RESERVED, expiredAt = LocalDateTime.now().plusMinutes(3)))
 
         // when then
         mockMvc.perform(

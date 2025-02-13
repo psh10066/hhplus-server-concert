@@ -39,6 +39,7 @@ class ConcertSeatRepositoryImplTest(
         val seat4 = concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = concertSchedule.id, seatNumber = 3))
         reservationJpaRepository.save(
             ReservationEntity(
+                concertId = concert.id,
                 concertSeatId = seat1.id,
                 userId = 1L,
                 status = ReservationStatus.PAYMENT_COMPLETED
@@ -46,6 +47,7 @@ class ConcertSeatRepositoryImplTest(
         )
         reservationJpaRepository.save(
             ReservationEntity(
+                concertId = concert.id,
                 concertSeatId = seat2.id,
                 userId = 1L,
                 status = ReservationStatus.RESERVED,
@@ -72,6 +74,7 @@ class ConcertSeatRepositoryImplTest(
         val seat3 = concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = concertSchedule.id, seatNumber = 3))
         reservationJpaRepository.save(
             ReservationEntity(
+                concertId = concert.id,
                 concertSeatId = seat1.id,
                 userId = 1L,
                 status = ReservationStatus.RESERVED,
@@ -80,6 +83,7 @@ class ConcertSeatRepositoryImplTest(
         )
         reservationJpaRepository.save(
             ReservationEntity(
+                concertId = concert.id,
                 concertSeatId = seat1.id,
                 userId = 2L,
                 status = ReservationStatus.RESERVED,

@@ -18,15 +18,13 @@ class ReservationCustomRepositoryImpl(
 
     override fun findConcertReservationCountsByDate(date: LocalDate, size: Int): List<ConcertReservationCount> {
         return queryFactory
-            .select(Projections.constructor(ConcertReservationCount::class.java, concertScheduleEntity.concertId, reservationEntity.count()))
-            .from(concertScheduleEntity)
-            .join(concertSeatEntity).on(concertSeatEntity.concertScheduleId.eq(concertScheduleEntity.id))
-            .leftJoin(reservationEntity).on(
-                reservationEntity.concertSeatId.eq(concertSeatEntity.id),
+            .select(Projections.constructor(ConcertReservationCount::class.java, reservationEntity.concertId, reservationEntity.count()))
+            .from(reservationEntity)
+            .where(
                 reservationEntity.expiredAt.isNull.or(reservationEntity.expiredAt.after(LocalDateTime.now(clock))),
                 reservationEntity.createdAt.between(date.atStartOfDay(), date.atTime(LocalTime.MAX))
             )
-            .groupBy(concertScheduleEntity.concertId)
+            .groupBy(reservationEntity.concertId)
             .orderBy(reservationEntity.count().desc())
             .limit(size.toLong())
             .fetch()

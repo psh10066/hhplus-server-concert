@@ -3,8 +3,7 @@ package kr.hhplus.be.server.application
 import kr.hhplus.be.server.domain.model.queue.Queue
 import kr.hhplus.be.server.domain.model.user.User
 import kr.hhplus.be.server.helper.CleanUp
-import kr.hhplus.be.server.infrastructure.dao.concert.ConcertSeatEntity
-import kr.hhplus.be.server.infrastructure.dao.concert.ConcertSeatJpaRepository
+import kr.hhplus.be.server.infrastructure.dao.concert.*
 import kr.hhplus.be.server.infrastructure.dao.queue.QueueRedisRepository
 import kr.hhplus.be.server.infrastructure.dao.reservation.ReservationJpaRepository
 import kr.hhplus.be.server.infrastructure.dao.user.UserEntity
@@ -14,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.time.LocalDate
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 import kotlin.time.Duration.Companion.minutes
@@ -21,6 +21,8 @@ import kotlin.time.Duration.Companion.minutes
 @SpringBootTest
 class ReservationFacadeConcurrencyIT(
     @Autowired private val userJpaRepository: UserJpaRepository,
+    @Autowired private val concertJpaRepository: ConcertJpaRepository,
+    @Autowired private val concertScheduleJpaRepository: ConcertScheduleJpaRepository,
     @Autowired private val concertSeatJpaRepository: ConcertSeatJpaRepository,
     @Autowired private val queueRedisRepository: QueueRedisRepository,
     @Autowired private val reservationJpaRepository: ReservationJpaRepository,
@@ -43,6 +45,8 @@ class ReservationFacadeConcurrencyIT(
             queueRedisRepository.addWaitingToken(Queue.create(user.uuid).token, i.toDouble())
         }
         queueRedisRepository.activateTokens(5, 5.minutes)
+        concertJpaRepository.save(ConcertEntity(name = "아이유 콘서트", price = 150000L))
+        concertScheduleJpaRepository.save(ConcertScheduleEntity(concertId = 1L, startTime = LocalDate.now().plusDays(1).atTime(11, 0)))
         val concertSeat = concertSeatJpaRepository.save(ConcertSeatEntity(concertScheduleId = 1L, seatNumber = 12))
 
         // when

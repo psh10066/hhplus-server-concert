@@ -50,6 +50,7 @@ CREATE TABLE concert_seat (
 
 CREATE TABLE reservation (
     id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    concert_id BIGINT NOT NULL,
     concert_seat_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
     status VARCHAR(255) NOT NULL,
