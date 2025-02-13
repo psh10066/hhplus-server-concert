@@ -1,7 +1,8 @@
 package kr.hhplus.be.server.domain.service
 
 import kr.hhplus.be.server.domain.event.ConcertReservationExpiredEvent
-import kr.hhplus.be.server.domain.event.ConcertReservationFinishedEvent
+import kr.hhplus.be.server.domain.event.ConcertReservationFailureEvent
+import kr.hhplus.be.server.domain.event.ConcertReservationSucceedEvent
 import kr.hhplus.be.server.domain.model.concert.Concert
 import kr.hhplus.be.server.domain.model.reservation.Reservation
 import kr.hhplus.be.server.domain.model.reservation.ReservationRepository
@@ -38,9 +39,11 @@ class ReservationService(
             val reservation = Reservation.reserve(clock, concert.id, concertSeatId, user.id)
             val savedReservation = reservationRepository.save(reservation)
 
+            applicationEventPublisher.publishEvent(ConcertReservationSucceedEvent(user, concertSeatId, savedReservation))
             return savedReservation.id
-        } finally {
-            applicationEventPublisher.publishEvent(ConcertReservationFinishedEvent(user, concertSeatId))
+        } catch (e: Exception) {
+            applicationEventPublisher.publishEvent(ConcertReservationFailureEvent(user, concertSeatId))
+            throw e
         }
     }
 

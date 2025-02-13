@@ -1,38 +1,26 @@
 package kr.hhplus.be.server.domain.event.listener
 
 import kr.hhplus.be.server.domain.event.ConcertReservationSucceedEvent
-import kr.hhplus.be.server.domain.event.ReservationConcertPaymentSucceedEvent
-import kr.hhplus.be.server.domain.service.QueueService
+import kr.hhplus.be.server.support.client.ExternalApiClient
 import org.slf4j.LoggerFactory
-import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 import org.springframework.transaction.event.TransactionPhase
 import org.springframework.transaction.event.TransactionalEventListener
 
 @Component
-class QueueEventListener(
-    private val queueService: QueueService
+class ReservationEventListener(
+    private val externalApiClient: ExternalApiClient
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
 
     @Async
     @TransactionalEventListener(value = [ConcertReservationSucceedEvent::class], phase = TransactionPhase.AFTER_COMMIT)
-    fun readyPayment(event: ConcertReservationSucceedEvent) {
+    fun sendReservationInfoToDataPlatform(event: ConcertReservationSucceedEvent) {
         try {
-            queueService.readyPayment(event.user.uuid)
+            externalApiClient.sendReservationInfoToDataPlatform(event.reservation)
         } catch (e: Exception) {
             log.error("[대기열] 결제 준비 실패", e)
-        }
-    }
-
-    @Async
-    @EventListener(value = [ReservationConcertPaymentSucceedEvent::class])
-    fun expire(event: ReservationConcertPaymentSucceedEvent) {
-        try {
-            queueService.expire(event.user.uuid)
-        } catch (e: Exception) {
-            log.error("[대기열] 만료 처리 실패", e)
         }
     }
 }

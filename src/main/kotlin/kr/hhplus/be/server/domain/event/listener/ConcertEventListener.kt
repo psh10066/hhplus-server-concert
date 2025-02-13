@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.domain.event.listener
 
 import kr.hhplus.be.server.domain.event.ConcertReservationExpiredEvent
-import kr.hhplus.be.server.domain.event.ConcertReservationFinishedEvent
+import kr.hhplus.be.server.domain.event.ConcertReservationFailureEvent
 import kr.hhplus.be.server.domain.service.ConcertService
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Async
@@ -19,8 +19,8 @@ class ConcertEventListener(
 
     @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @TransactionalEventListener(value = [ConcertReservationFinishedEvent::class], phase = TransactionPhase.AFTER_ROLLBACK)
-    fun cancelSeatReservation(event: ConcertReservationFinishedEvent) {
+    @TransactionalEventListener(value = [ConcertReservationFailureEvent::class], phase = TransactionPhase.AFTER_ROLLBACK)
+    fun cancelSeatReservation(event: ConcertReservationFailureEvent) {
         try {
             concertService.cancelSeat(event.concertSeatId)
         } catch (e: Exception) {
