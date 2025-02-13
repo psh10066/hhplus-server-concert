@@ -30,4 +30,5 @@ enum class ErrorType(val status: HttpStatus, val message: String, val logLevel: 
     RESERVATION_NOT_FOUND(status = HttpStatus.NOT_FOUND, message = "존재하지 않는 예약입니다.", logLevel = LogLevel.WARN),
     ALREADY_RESERVED_CONCERT_SEAT(status = HttpStatus.BAD_REQUEST, "이미 예약된 좌석입니다.", logLevel = LogLevel.INFO),
     NOT_PAYABLE_RESERVATION(status = HttpStatus.NOT_FOUND, message = "결제 가능한 예약이 아닙니다.", logLevel = LogLevel.WARN),
+    CANNOT_ROLLBACK_PAY_RESERVATION(status = HttpStatus.NOT_FOUND, message = "취소 가능한 예약이 아닙니다.", logLevel = LogLevel.WARN),
 }

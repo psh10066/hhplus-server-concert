@@ -74,6 +74,17 @@ class ConcertService(
     }
 
     @Transactional
+    fun rollbackPaymentSeat(concertSeatId: Long) {
+        val concertSeat = concertSeatRepository.getById(concertSeatId)
+        concertSeat.rollbackPayment()
+        try {
+            concertSeatRepository.saveAndFlush(concertSeat)
+        } catch (e: OptimisticLockingFailureException) {
+            throw CustomException(ErrorType.CANNOT_ROLLBACK_PAY_RESERVATION)
+        }
+    }
+
+    @Transactional
     fun cancelSeatReservation(concertSeatIds: List<Long>) {
         val concertSeats = concertSeatRepository.getAllById(concertSeatIds)
         concertSeats.forEach { concertSeat ->

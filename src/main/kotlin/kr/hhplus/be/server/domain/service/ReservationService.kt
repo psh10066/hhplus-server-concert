@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Clock
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Service
 class ReservationService(
@@ -42,9 +43,19 @@ class ReservationService(
         }
     }
 
+    fun getReservation(id: Long): Reservation {
+        return reservationRepository.getById(id)
+    }
+
     fun payReservation(id: Long): Reservation {
         val reservation = reservationRepository.getById(id)
         reservation.pay(clock)
+        return reservationRepository.save(reservation)
+    }
+
+    fun rollbackPayReservation(id: Long, expiredAt: LocalDateTime): Reservation {
+        val reservation = reservationRepository.getById(id)
+        reservation.rollbackPay(expiredAt)
         return reservationRepository.save(reservation)
     }
 

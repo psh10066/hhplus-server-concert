@@ -24,6 +24,13 @@ class ConcertSeat(
         status = ConcertSeatStatus.PAYMENT_COMPLETED
     }
 
+    fun rollbackPayment() {
+        if (status != ConcertSeatStatus.PAYMENT_COMPLETED) {
+            throw CustomException(ErrorType.CANNOT_ROLLBACK_PAY_RESERVATION)
+        }
+        status = ConcertSeatStatus.RESERVED
+    }
+
     fun cancelReservation() {
         status = ConcertSeatStatus.AVAILABLE
     }
