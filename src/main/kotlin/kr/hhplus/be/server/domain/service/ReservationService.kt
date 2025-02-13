@@ -2,13 +2,14 @@ package kr.hhplus.be.server.domain.service
 
 import kr.hhplus.be.server.domain.event.ConcertReservationExpiredEvent
 import kr.hhplus.be.server.domain.event.ConcertReservationFinishedEvent
-import kr.hhplus.be.server.domain.model.reservation.ConcertReservationCount
+import kr.hhplus.be.server.domain.model.concert.Concert
 import kr.hhplus.be.server.domain.model.reservation.Reservation
 import kr.hhplus.be.server.domain.model.reservation.ReservationRepository
 import kr.hhplus.be.server.domain.model.user.User
 import kr.hhplus.be.server.support.client.ConcertApiClient
 import kr.hhplus.be.server.support.error.CustomException
 import kr.hhplus.be.server.support.error.ErrorType
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -68,7 +69,15 @@ class ReservationService(
         return reservations
     }
 
-    fun getConcertReservationCounts(date: LocalDate, size: Int): List<ConcertReservationCount> {
-        return reservationRepository.findConcertReservationCountsByDate(date, size)
+    @Cacheable(value = ["popularConcerts"])
+    fun getPopularConcerts(): List<Concert> {
+        val size = 20
+        val reservationCounts = reservationRepository.findConcertReservationCountsByDate(LocalDate.now(clock), size)
+        val concerts = concertApiClient.findConcerts(reservationCounts.map { it.concertId })
+
+        val concertMap: Map<Long, Concert> = concerts.associateBy { it.id }
+        return reservationCounts
+            .sortedByDescending { it.count }
+            .mapNotNull { concertMap[it.concertId] }
     }
 }
