@@ -20,7 +20,7 @@ class ReservationEventListener(
         try {
             externalApiClient.sendReservationInfoToDataPlatform(event.reservation)
         } catch (e: Exception) {
-            log.error("[대기열] 결제 준비 실패", e)
+            log.error("[예약] 데이터 플랫폼 전송 실패", e)
         }
     }
 }
