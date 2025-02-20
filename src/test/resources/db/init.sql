@@ -68,6 +68,20 @@ CREATE TABLE reservation (
     KEY idx_reservation_user_id (user_id)
 );
 
+CREATE TABLE reservation_outbox (
+    id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    operation_type VARCHAR(255) NOT NULL,
+    operation_id VARCHAR(255) NOT NULL,
+    topic VARCHAR(255) NOT NULL,
+    topic_key VARCHAR(255) NULL,
+    message TEXT NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL,
+    UNIQUE KEY uk_reservation_outbox_operation_type_operation_id (operation_type, operation_id),
+    KEY idx_reservation_outbox_status_created_at (status, created_at)
+);
+
 CREATE TABLE payment_history (
     id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     reservation_id BIGINT NOT NULL,
