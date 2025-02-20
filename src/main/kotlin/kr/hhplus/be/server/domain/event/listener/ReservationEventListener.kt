@@ -1,26 +1,37 @@
 package kr.hhplus.be.server.domain.event.listener
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import kr.hhplus.be.server.domain.event.ConcertReservationSucceedEvent
-import kr.hhplus.be.server.support.client.ExternalApiClient
-import org.slf4j.LoggerFactory
-import org.springframework.scheduling.annotation.Async
+import kr.hhplus.be.server.domain.model.reservation.Reservation
+import kr.hhplus.be.server.domain.model.reservation.ReservationOutbox
+import kr.hhplus.be.server.domain.model.reservation.ReservationOutboxRepository
+import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Component
 import org.springframework.transaction.event.TransactionPhase
 import org.springframework.transaction.event.TransactionalEventListener
 
+const val CONCERT_RESERVATION_TOPIC = "concert-reservation"
+
 @Component
 class ReservationEventListener(
-    private val externalApiClient: ExternalApiClient
+    private val reservationOutboxRepository: ReservationOutboxRepository,
+    private val kafkaTemplate: KafkaTemplate<String, Reservation>,
+    private val objectMapper: ObjectMapper
 ) {
-    private val log = LoggerFactory.getLogger(javaClass)
 
-    @Async
+    @TransactionalEventListener(value = [ConcertReservationSucceedEvent::class], phase = TransactionPhase.BEFORE_COMMIT)
+    fun putConcertReservationOutbox(event: ConcertReservationSucceedEvent) {
+        val reservationOutbox = ReservationOutbox.create(
+            operationType = "concertReservation",
+            operationId = event.reservation.id.toString(),
+            topic = CONCERT_RESERVATION_TOPIC,
+            message = objectMapper.writeValueAsString(event.reservation)
+        )
+        reservationOutboxRepository.save(reservationOutbox)
+    }
+
     @TransactionalEventListener(value = [ConcertReservationSucceedEvent::class], phase = TransactionPhase.AFTER_COMMIT)
-    fun sendReservationInfoToDataPlatform(event: ConcertReservationSucceedEvent) {
-        try {
-            externalApiClient.sendReservationInfoToDataPlatform(event.reservation)
-        } catch (e: Exception) {
-            log.error("[예약] 데이터 플랫폼 전송 실패", e)
-        }
+    fun sendKafka(event: ConcertReservationSucceedEvent) {
+        kafkaTemplate.send(CONCERT_RESERVATION_TOPIC, event.reservation)
     }
 }
