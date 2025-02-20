@@ -60,6 +60,7 @@ dependencies {
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mysql")
 	testImplementation("com.redis:testcontainers-redis:2.2.2")
+	testImplementation("org.testcontainers:kafka")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
 
@@ -84,6 +85,9 @@ dependencies {
 
 	// Redisson
 	implementation("org.redisson:redisson-spring-boot-starter:3.43.0")
+
+	// Kafka
+	implementation("org.springframework.kafka:spring-kafka")
 }
 
 // OpenAPI Specification
