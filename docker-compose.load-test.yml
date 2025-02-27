@@ -24,6 +24,8 @@ services:
     image: bitnami/grafana:latest
     ports:
       - "3000:3000"
+    volumes:
+      - ./grafana/data:/opt/bitnami/grafana/data
 
   mysql-exporter:
     container_name: mysql-exporter
@@ -34,7 +36,30 @@ services:
     depends_on:
       - mysql
 
-  # 아래는 부하 테스트용 저사양 환경 임의 세팅
+  redis-exporter:
+    container_name: redis-exporter
+    image: oliver006/redis_exporter:latest
+    ports:
+      - "9121:9121"
+    environment:
+      REDIS_ADDR: redis:6379
+    depends_on:
+      - redis
+
+  kafka-exporter:
+    container_name: kafka-exporter
+    image: danielqsj/kafka-exporter:latest
+    restart: always
+    ports:
+      - "9308:9308"
+    environment:
+      KAFKA_SERVER: kafka:29092
+    command:
+      - "--kafka.server=kafka:29092"
+    depends_on:
+      - kafka
+
+  # 아래는 부하 테스트용 임의 환경 세팅
   mysql:
     image: mysql:8.0
     ports:
@@ -48,11 +73,11 @@ services:
       - ./data/mysql/:/var/lib/mysql
       - ./src/test/resources/db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
       - ./mysql-privileges.load-test.sql:/docker-entrypoint-initdb.d/mysql-privileges.load-test.sql:ro
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 1024M
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '1.0'
+#          memory: 1024M
   redis:
     image: redis:latest
     ports:
@@ -62,6 +87,57 @@ services:
         limits:
           cpus: '1.0'
           memory: 1024M
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1024M
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - "8081:8080" # Kafka UI는 8081로 접근 (8080은 Spring Boot Application이 사용)
+    environment:
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+    depends_on:
+      - kafka
+
+  spring:
+    container_name: spring
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=load-test
+      - SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE=50
+    ports:
+      - "8080:8080"
+      - "8000:8000"
+    depends_on:
+      - mysql
+      - redis
+      - kafka
 
 networks:
   default:
