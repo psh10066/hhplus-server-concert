@@ -46,7 +46,7 @@ class ReservationController(
     fun popularConcerts(
         user: User
     ): ApiResponse<GetPopularConcertResponse> {
-        val popularConcerts = reservationService.getPopularConcerts()
+        val popularConcerts = reservationFacade.getPopularConcerts()
         val response = GetPopularConcertResponse(popularConcerts.map {
             GetPopularConcertResponse.ConcertDto.of(it)
         })
