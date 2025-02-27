@@ -3,11 +3,13 @@ package kr.hhplus.be.server.application
 import kr.hhplus.be.server.application.orchestrator.ReservationConcertPaymentFlow
 import kr.hhplus.be.server.application.orchestrator.ReservationConcertPaymentOrchestrator
 import kr.hhplus.be.server.domain.event.ReservationConcertPaymentSucceedEvent
+import kr.hhplus.be.server.domain.model.concert.Concert
 import kr.hhplus.be.server.domain.model.user.User
 import kr.hhplus.be.server.domain.service.ReservationService
 import kr.hhplus.be.server.support.client.ConcertApiClient
 import kr.hhplus.be.server.support.client.PaymentApiClient
 import kr.hhplus.be.server.support.client.UserApiClient
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 
@@ -50,5 +52,10 @@ class ReservationFacade(
         } finally {
             orchestrator.clear()
         }
+    }
+
+    @Cacheable(value = ["popularConcerts"])
+    fun getPopularConcerts(): List<Concert> {
+        return reservationService.getPopularConcerts()
     }
 }
