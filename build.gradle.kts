@@ -88,6 +88,10 @@ dependencies {
 
 	// Kafka
 	implementation("org.springframework.kafka:spring-kafka")
+
+	// Monitoring
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("io.micrometer:micrometer-registry-prometheus")
 }
 
 // OpenAPI Specification
